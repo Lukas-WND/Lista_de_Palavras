@@ -6,20 +6,38 @@
 #include <string.h>
 
 #define MAX_PALAVRA 50
+#define MAX_DESCRICAO 500
 
 using namespace std;
 
 typedef struct ListaPalavras {
     char palavra[MAX_PALAVRA];
+    char descricao[MAX_DESCRICAO];
     ListaPalavras *proxPalavra;
 } ListaPalavras;
 
 typedef struct ListaLetras{
     char letra;
+    int qtdPalavras;
     ListaPalavras *inicioPalavras, *fimPalavras;
     ListaLetras *proxLetra;
     ListaLetras *antLetra;
 } ListaLetras;
+
+bool validPalavra(char *palavra){ // Verifica se o caracter está entre 'A' e 'Z' ou 'a' e 'z'
+    int i = 0;
+
+    while(palavra[i] != '\0'){
+
+        if((palavra[i] < 65 || palavra[i] > 122) || (palavra[i] > 90 && palavra[i] < 97)){
+            return false;
+        } else {
+            i++;
+        }
+    }
+
+    return true;
+}
 
 ListaLetras *buscarLetra(ListaLetras *inicio, ListaLetras *fim, char letra){
 
@@ -46,7 +64,8 @@ ListaLetras *buscarLetra(ListaLetras *inicio, ListaLetras *fim, char letra){
 void adicionarLetra(ListaLetras **inicio, ListaLetras **fim, char letra){
     ListaLetras *novaLetra = new ListaLetras();
 
-    novaLetra->letra = letra;
+    novaLetra->letra = toupper(letra);
+    novaLetra->qtdPalavras = 0;
     novaLetra->inicioPalavras = NULL;
     novaLetra->fimPalavras = NULL;
 
@@ -67,7 +86,8 @@ void adicionarLetra(ListaLetras **inicio, ListaLetras **fim, char letra){
 
 void adicionarPalavra(ListaLetras **inicio, ListaLetras **fim){
     char palavra[MAX_PALAVRA];
-    ListaLetras *letra = *inicio;
+    char descricao[MAX_DESCRICAO];
+    ListaLetras *letra;
     ListaPalavras *novaPalavra = new ListaPalavras();
 
     system("cls");
@@ -75,24 +95,43 @@ void adicionarPalavra(ListaLetras **inicio, ListaLetras **fim){
     cout << "Digite a palavra: ";
     cin.getline(palavra, MAX_PALAVRA);
 
-    letra = buscarLetra(*inicio, *fim, palavra[0]);
+    if(validPalavra(palavra)){
+        char descricao[MAX_DESCRICAO];
+        palavra[0] = toupper(palavra[0]);
 
-    if(letra == NULL){
-        adicionarLetra(inicio, fim, palavra[0]);
+        cout << "Informe a descricao de " << palavra << ": ";
+        cin.getline(descricao, MAX_DESCRICAO);
+
         letra = buscarLetra(*inicio, *fim, palavra[0]);
-    }
 
-    strcpy(novaPalavra->palavra, palavra);
+        if(letra == NULL) {
+            adicionarLetra(inicio, fim, palavra[0]);
+            letra = buscarLetra(*inicio, *fim, palavra[0]);
+        }
 
-    if(letra->inicioPalavras == NULL){ // Lista de palavras vazia
-        letra->inicioPalavras = novaPalavra;
-        letra->fimPalavras = novaPalavra;
-        novaPalavra->proxPalavra = NULL;
+        strcpy(novaPalavra->palavra, palavra);
+        strcpy(novaPalavra->descricao, descricao);
+
+        if(letra->inicioPalavras == NULL){ // Lista de palavras vazia
+            letra->inicioPalavras = novaPalavra;
+            letra->fimPalavras = novaPalavra;
+            novaPalavra->proxPalavra = NULL;
+        } else {
+            letra->fimPalavras->proxPalavra = novaPalavra;
+            letra->fimPalavras = letra->fimPalavras->proxPalavra;
+            novaPalavra->proxPalavra = NULL;
+        }
+
+        letra->qtdPalavras++;
+
+        cout << "\nPalavra adicionada com sucesso!" << endl;
+
     } else {
-        letra->fimPalavras->proxPalavra = novaPalavra;
-        letra->fimPalavras = letra->fimPalavras->proxPalavra;
-        novaPalavra->proxPalavra = NULL;
+        cout << "\nCaracter invalido!" << endl;
     }
+
+    system("pause");
+    system("cls");
 }
 
 void exibirLetras(ListaLetras *inicio, ListaLetras *fim){
@@ -102,7 +141,7 @@ void exibirLetras(ListaLetras *inicio, ListaLetras *fim){
         cout << "Nenhuma letra esta disponivel!\n\n";
     } else {
         while(aux != NULL){
-            cout << aux->letra << " ";
+            cout << aux->letra << " " << aux->qtdPalavras << "; ";
             aux = aux->proxLetra;
         }
     }
@@ -124,6 +163,7 @@ void exibirPalavras(ListaLetras *inicio, ListaLetras *fim){
 
         cout << "Informe a letra que deseja consultar: ";
         cin >> letra;
+        letra = toupper(letra);
 
         letraE = buscarLetra(inicio, fim, letra);
 
@@ -134,7 +174,7 @@ void exibirPalavras(ListaLetras *inicio, ListaLetras *fim){
 
             cout << "Palavras cadastradas:\n\n";
             while(aux != NULL){
-                cout << aux->palavra << endl;
+                cout << aux->palavra << ": " << aux->descricao << endl;
                 aux = aux->proxPalavra;
             }
             cout << "\n\n";
