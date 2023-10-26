@@ -61,7 +61,53 @@ ListaLetras *buscarLetra(ListaLetras *inicio, ListaLetras *fim, char letra){
     return NULL;
 }
 
-void adicionarLetra(ListaLetras **inicio, ListaLetras **fim, char letra){
+ListaPalavras *buscarPalavra(ListaLetras *letra, char *palavra){
+
+    if(letra->inicioPalavras == NULL){
+        return NULL;
+    } else if(strcmp(letra->inicioPalavras->palavra, palavra) == 0){
+        return letra->inicioPalavras;
+    } else if(strcmp(letra->fimPalavras->palavra, palavra) == 0){
+        return letra->fimPalavras;
+    } else {
+        ListaPalavras *aux = letra->inicioPalavras;
+
+        while(aux != NULL){
+            if(strcmp(aux->palavra, palavra) == 0){
+                return aux;
+            } else {
+                aux = aux->proxPalavra;
+            }
+        }
+    }
+
+    return NULL;
+}
+
+ListaPalavras *buscarPalavraAnterior(ListaLetras *letra, char *palavra){
+
+    if(letra->inicioPalavras == NULL){ // lista vazia
+        return NULL;
+    } else if(strcmp(letra->inicioPalavras->palavra, palavra) == 0){ // palavra no começo da lista
+        return NULL;
+    } else {
+        ListaPalavras *aux = letra->inicioPalavras;
+
+        while (aux != NULL) {
+            if(aux->proxPalavra == NULL){ // se a proxima palavra nao existe
+                return NULL;
+            } else if(strcmp(aux->proxPalavra->palavra, palavra) == 0){ // se proxima palavra é igual à passada como parâmetro
+                return aux;
+            } else {
+                aux = aux->proxPalavra;
+            }
+        }
+    }
+
+    return NULL;
+}
+
+void inserirLetra(ListaLetras **inicio, ListaLetras **fim, char letra){
     ListaLetras *novaLetra = new ListaLetras();
 
     novaLetra->letra = toupper(letra);
@@ -69,50 +115,37 @@ void adicionarLetra(ListaLetras **inicio, ListaLetras **fim, char letra){
     novaLetra->inicioPalavras = NULL;
     novaLetra->fimPalavras = NULL;
 
-    if(*inicio == NULL){ // Lista Vazia
+    if((*inicio) == NULL){ // Lista Vazia
         (*inicio) = novaLetra;
         (*fim) = novaLetra;
         novaLetra->antLetra = NULL;
         novaLetra->proxLetra = NULL;
     } else {
-        ListaLetras *aux = *fim;
-
         (*fim)->proxLetra = novaLetra;
+        (*fim)->proxLetra->antLetra = (*fim);
         (*fim) = (*fim)->proxLetra;
-        novaLetra->antLetra = aux;
         novaLetra->proxLetra = NULL;
     }
 }
 
-void adicionarPalavra(ListaLetras **inicio, ListaLetras **fim){
-    char palavra[MAX_PALAVRA];
-    char descricao[MAX_DESCRICAO];
-    ListaLetras *letra;
-    ListaPalavras *novaPalavra = new ListaPalavras();
-
-    system("cls");
-    cout << "ADICIONAR PALAVRA A LISTA" << endl;
-    cout << "Digite a palavra: ";
-    cin.getline(palavra, MAX_PALAVRA);
+void inserirPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra, char *descricao){
 
     if(validPalavra(palavra)){
-        char descricao[MAX_DESCRICAO];
+        ListaLetras *letra;
+        ListaPalavras *novaPalavra = new ListaPalavras();
+
         palavra[0] = toupper(palavra[0]);
 
-        cout << "Informe a descricao de " << palavra << ": ";
-        cin.getline(descricao, MAX_DESCRICAO);
+        if(buscarLetra(*inicio, *fim, palavra[0]) == NULL){
+            inserirLetra(inicio, fim, palavra[0]);
+        }
 
         letra = buscarLetra(*inicio, *fim, palavra[0]);
-
-        if(letra == NULL) {
-            adicionarLetra(inicio, fim, palavra[0]);
-            letra = buscarLetra(*inicio, *fim, palavra[0]);
-        }
 
         strcpy(novaPalavra->palavra, palavra);
         strcpy(novaPalavra->descricao, descricao);
 
-        if(letra->inicioPalavras == NULL){ // Lista de palavras vazia
+        if(letra->inicioPalavras == NULL){
             letra->inicioPalavras = novaPalavra;
             letra->fimPalavras = novaPalavra;
             novaPalavra->proxPalavra = NULL;
@@ -124,14 +157,9 @@ void adicionarPalavra(ListaLetras **inicio, ListaLetras **fim){
 
         letra->qtdPalavras++;
 
-        cout << "\nPalavra adicionada com sucesso!" << endl;
-
     } else {
-        cout << "\nCaracter invalido!" << endl;
+        // inserirErro();
     }
-
-    system("pause");
-    system("cls");
 }
 
 void exibirLetras(ListaLetras *inicio, ListaLetras *fim){
@@ -184,16 +212,67 @@ void exibirPalavras(ListaLetras *inicio, ListaLetras *fim){
     system("cls");
 }
 
+void deletarLetra(ListaLetras **inicio, ListaLetras **fim, ListaLetras *letra){
+    if((*inicio) == letra){
+        (*inicio) = letra->proxLetra;
+        (*inicio)->antLetra = NULL;
+        delete(letra);
+    } else if((*fim) == letra){
+        (*fim) = letra->antLetra;
+        (*fim)->proxLetra = NULL;
+        delete(letra);
+    } else {
+        letra->antLetra->proxLetra = letra->proxLetra;
+        letra->proxLetra->antLetra = letra->antLetra;
+        delete(letra);
+    }
+}
+
+void deletarPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra){
+    if(validPalavra(palavra)){
+
+        palavra[0] = toupper(palavra[0]);
+
+        ListaLetras *letra = buscarLetra(*inicio, *fim, palavra[0]);
+        ListaPalavras *pAtual = buscarPalavra(letra, palavra);
+        ListaPalavras *pAnterior = buscarPalavraAnterior(letra, palavra);
+
+        if(pAtual == NULL){
+            // inserirErro();
+        } else {
+            if(letra->inicioPalavras == pAtual){
+                letra->inicioPalavras = pAtual->proxPalavra;
+            } else if(letra->fimPalavras == pAtual) {
+                pAnterior->proxPalavra = NULL;
+            } else {
+                pAnterior->proxPalavra = pAtual->proxPalavra;
+            }
+        }
+
+        delete(pAtual);
+        letra->qtdPalavras--;
+
+        if(letra->qtdPalavras == 0){
+           deletarLetra(inicio, fim, letra);
+        }
+
+    } else {
+        // inserirErro();
+    }
+}
+
 int main(){
     ListaLetras *inicio= NULL;
     ListaLetras *fim = NULL;
     int menu = 1;
+    char palavra[MAX_PALAVRA], descricao[MAX_DESCRICAO];
 
     while(menu != 0){
         cout << "************ MENU PRINCIPAL ************\n\n";
         cout << "****************************************" << endl;
         cout << "* [1] - Adicionar uma palavra          *" << endl;
         cout << "* [2] - Exibir as palavras existentes  *" << endl;
+        cout << "* [3] - Deletar uma palavra            *" << endl;
         cout << "* [0] - Sair do programa               *" << endl;
         cout << "****************************************" << endl;
         cout << "Selecione uma opcao: ";
@@ -202,10 +281,29 @@ int main(){
 
         switch (menu) {
             case 1:
-                adicionarPalavra(&inicio, &fim);
+                system("cls");
+
+                cout << "Informe a palavra: ";
+                cin.getline(palavra, MAX_PALAVRA);
+
+                cout << "Informe a descricao: ";
+                cin.getline(descricao, MAX_DESCRICAO);
+
+                inserirPalavra(&inicio, &fim, palavra, descricao);
+
                 break;
             case 2:
                 exibirPalavras(inicio, fim);
+
+                break;
+            case 3:
+                system("cls");
+
+                cout << "Informe a palavra: ";
+                cin.getline(palavra, MAX_PALAVRA);
+
+                deletarPalavra(&inicio, &fim, palavra);
+
                 break;
             case 0:
                 system("cls");
