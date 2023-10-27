@@ -13,6 +13,7 @@ using namespace std;
 typedef struct ListaPalavras {
     char palavra[MAX_PALAVRA];
     char descricao[MAX_DESCRICAO];
+    int qtdPesquisas;
     ListaPalavras *proxPalavra;
 } ListaPalavras;
 
@@ -63,6 +64,9 @@ ListaLetras *buscarLetra(ListaLetras *inicio, ListaLetras *fim, char letra){
 
 ListaPalavras *buscarPalavra(ListaLetras *letra, char *palavra){
 
+    if(letra == NULL){
+        return NULL;
+    }
     if(letra->inicioPalavras == NULL){
         return NULL;
     } else if(strcmp(letra->inicioPalavras->palavra, palavra) == 0){
@@ -134,7 +138,8 @@ void inserirPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra, char
         ListaLetras *letra;
         ListaPalavras *novaPalavra = new ListaPalavras();
 
-        palavra[0] = toupper(palavra[0]);
+        palavra = strupr(palavra);
+        descricao[0] = toupper(descricao[0]);
 
         if(buscarLetra(*inicio, *fim, palavra[0]) == NULL){
             inserirLetra(inicio, fim, palavra[0]);
@@ -142,6 +147,7 @@ void inserirPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra, char
 
         letra = buscarLetra(*inicio, *fim, palavra[0]);
 
+        novaPalavra->qtdPesquisas = 0;
         strcpy(novaPalavra->palavra, palavra);
         strcpy(novaPalavra->descricao, descricao);
 
@@ -231,29 +237,36 @@ void deletarLetra(ListaLetras **inicio, ListaLetras **fim, ListaLetras *letra){
 void deletarPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra){
     if(validPalavra(palavra)){
 
-        palavra[0] = toupper(palavra[0]);
+        palavra = strupr(palavra);
 
         ListaLetras *letra = buscarLetra(*inicio, *fim, palavra[0]);
-        ListaPalavras *pAtual = buscarPalavra(letra, palavra);
-        ListaPalavras *pAnterior = buscarPalavraAnterior(letra, palavra);
 
-        if(pAtual == NULL){
-            // inserirErro();
-        } else {
-            if(letra->inicioPalavras == pAtual){
-                letra->inicioPalavras = pAtual->proxPalavra;
-            } else if(letra->fimPalavras == pAtual) {
-                pAnterior->proxPalavra = NULL;
+        if(letra != NULL){
+            ListaPalavras *pAtual = buscarPalavra(letra, palavra);
+            ListaPalavras *pAnterior = buscarPalavraAnterior(letra, palavra);
+
+            if(pAtual != NULL){
+                if(letra->inicioPalavras == pAtual){
+                    letra->inicioPalavras = pAtual->proxPalavra;
+                } else if(letra->fimPalavras == pAtual) {
+                    pAnterior->proxPalavra = NULL;
+                } else {
+                    pAnterior->proxPalavra = pAtual->proxPalavra;
+                }
+
+                delete(pAtual);
+                letra->qtdPalavras--;
             } else {
-                pAnterior->proxPalavra = pAtual->proxPalavra;
+                // palavra nao encontrada
+                // inserirErro();
             }
-        }
 
-        delete(pAtual);
-        letra->qtdPalavras--;
-
-        if(letra->qtdPalavras == 0){
-           deletarLetra(inicio, fim, letra);
+            if(letra->qtdPalavras == 0){
+                deletarLetra(inicio, fim, letra);
+            }
+        } else {
+            // letra nao encontrada
+            // inserirErro();
         }
 
     } else {
@@ -261,11 +274,34 @@ void deletarPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra){
     }
 }
 
+void atualizarPalavra(ListaLetras **inicio,
+                      ListaLetras **fim,
+                      ListaPalavras *palavra,
+                      char *novaPalavra,
+                      char *novaDescricao){
+
+    novaPalavra = strupr(novaPalavra);
+    novaDescricao[0] = toupper(novaDescricao[0]);
+
+    if(validPalavra(novaPalavra)){ // nova palavra é válida
+        if(palavra->palavra[0] == novaPalavra[0]){
+            strcpy(palavra->palavra, novaPalavra);
+            strcpy(palavra->descricao, novaDescricao);
+        } else {
+            deletarPalavra(inicio, fim, palavra->palavra);
+            inserirPalavra(inicio, fim, novaPalavra, novaDescricao);
+        }
+    } else {
+        // inserirErro();
+    }
+
+}
+
 int main(){
     ListaLetras *inicio= NULL;
     ListaLetras *fim = NULL;
     int menu = 1;
-    char palavra[MAX_PALAVRA], descricao[MAX_DESCRICAO];
+    char palavra[MAX_PALAVRA], descricao[MAX_DESCRICAO], opcao;
 
     while(menu != 0){
         cout << "************ MENU PRINCIPAL ************\n\n";
@@ -273,6 +309,7 @@ int main(){
         cout << "* [1] - Adicionar uma palavra          *" << endl;
         cout << "* [2] - Exibir as palavras existentes  *" << endl;
         cout << "* [3] - Deletar uma palavra            *" << endl;
+        cout << "* [4] - Atualizar uma palavra          *" << endl;
         cout << "* [0] - Sair do programa               *" << endl;
         cout << "****************************************" << endl;
         cout << "Selecione uma opcao: ";
@@ -303,6 +340,49 @@ int main(){
                 cin.getline(palavra, MAX_PALAVRA);
 
                 deletarPalavra(&inicio, &fim, palavra);
+
+                break;
+            case 4:
+                system("cls");
+
+                cout << "Informe a palavra que deseja atualizar: ";
+                cin.getline(palavra, MAX_PALAVRA);
+
+                if(validPalavra(palavra)){
+                    ListaPalavras *palavraEncontrada = buscarPalavra(buscarLetra(inicio, fim, palavra[0]), strupr(palavra));
+
+                    if(palavraEncontrada != NULL) {
+                        char novaPalavra[MAX_PALAVRA];
+
+                        cout << "Palavra atual: " << palavraEncontrada->palavra << endl;
+                        cout << "Nova palavra: ";
+                        cin.getline(novaPalavra, MAX_PALAVRA);
+
+                        cout << "\nDescricao atual: " << palavraEncontrada->descricao << "\n\n";
+                        cout << "Deseja atualizar a descricao de " << novaPalavra << "? [S/N]" << endl;
+                        cout << "Digite a opcao: ";
+                        cin >> opcao;
+                        cin.ignore();
+
+                        if(opcao == 'S' || opcao == 's'){
+                            cout << "\nInforme a nova descricao: ";
+                            cin.getline(descricao, MAX_DESCRICAO);
+                            atualizarPalavra(&inicio, &fim, palavraEncontrada, novaPalavra, descricao);
+                        } else if(opcao == 'N' || opcao == 'n'){
+                            atualizarPalavra(&inicio, &fim, palavraEncontrada, novaPalavra, palavraEncontrada->descricao);
+                        } else {
+                            cout << "\nOpcao nao identificada" << endl;
+                        }
+                    } else {
+                        cout << "\nPalavra nao encontrada" << endl;
+                    }
+                } else {
+                    cout << "\nPalavra Invalida" << endl;
+                    // inserirErro();
+                }
+
+                system("pause");
+                system("cls");
 
                 break;
             case 0:
