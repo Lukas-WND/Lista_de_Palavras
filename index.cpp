@@ -4,10 +4,12 @@
 
 #include <iostream>
 #include <string.h>
+#include <windows.h>
+#include <time.h>
 
+#define DICIONARIO "DicionarioPalavras.txt"
 #define MAX_PALAVRA 50
 #define MAX_DESCRICAO 500
-#define DICIONARIO "dicionario.txt"
 
 using namespace std;
 
@@ -25,6 +27,33 @@ typedef struct ListaLetras{
     ListaLetras *proxLetra;
     ListaLetras *antLetra;
 } ListaLetras;
+
+void gotoxy(int x , int y){
+    COORD coord;
+    coord.X = x;
+    coord.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+void quadro (){
+
+    gotoxy(0,0); printf("%c", 201);
+    for (int i=1;i<=44;i++){
+        gotoxy(i,0); printf("%c", 205);
+    }
+    gotoxy(45,0); printf("%c", 187);
+    for (int c=1; c<=11; c++){
+        gotoxy(0,c); printf("%c", 186);
+    }
+    for (int j=1; j<=11; j++){
+        gotoxy(45,j); printf("%c", 186);
+    }
+    gotoxy(0,12); printf("%c", 200);
+    for (int i=1;i<=44;i++){
+        gotoxy(i,12); printf("%c", 205);
+    }
+    gotoxy(45,12); printf("%c", 188);
+}
 
 bool validPalavra(char *palavra){ // Verifica se o caracter está entre 'A' e 'Z' ou 'a' e 'z'
     int i = 0;
@@ -111,7 +140,6 @@ ListaPalavras *buscarPalavraAnterior(ListaLetras *letra, char *palavra){
 
     return NULL;
 }
-
 void salvarArquivo(ListaLetras *inicio, ListaLetras *fim){
     FILE *arq;
 
@@ -187,9 +215,7 @@ void inserirPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra, char
         }
 
         letra->qtdPalavras++;
-
         salvarArquivo(*inicio, *fim);
-
     } else {
         // inserirErro();
     }
@@ -283,7 +309,6 @@ void deletarPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra){
 
                 delete(pAtual);
                 letra->qtdPalavras--;
-
                 salvarArquivo(*inicio, *fim);
             } else {
                 // palavra nao encontrada
@@ -324,8 +349,8 @@ void atualizarPalavra(ListaLetras **inicio,
     } else {
         // inserirErro();
     }
-}
 
+}
 void carregarArquivo(ListaLetras **inicio, ListaLetras **fim){
     FILE *arq;
 
@@ -338,7 +363,7 @@ void carregarArquivo(ListaLetras **inicio, ListaLetras **fim){
 
         while(fgets(linha, sizeof(linha), arq) != NULL){
             char *palavra, *descricao;
-            
+
             palavra = strtok(linha, "/");
             descricao = strtok(NULL, "/");
 
@@ -358,15 +383,31 @@ int main(){
     carregarArquivo(&inicio, &fim);
 
     while(menu != 0){
-        cout << "************ MENU PRINCIPAL ************\n\n";
-        cout << "****************************************" << endl;
-        cout << "* [1] - Adicionar uma palavra          *" << endl;
-        cout << "* [2] - Exibir as palavras existentes  *" << endl;
-        cout << "* [3] - Deletar uma palavra            *" << endl;
-        cout << "* [4] - Atualizar uma palavra          *" << endl;
-        cout << "* [0] - Sair do programa               *" << endl;
-        cout << "****************************************" << endl;
-        cout << "Selecione uma opcao: ";
+        quadro();
+        gotoxy(1,2); cout << "               MENU PRINCIPAL             \n\n\n";
+        gotoxy(3,3); printf("%c", 218);
+        for (int i=4;i<=41;i++){
+            gotoxy(i,3); printf("%c", 196);
+        }
+        gotoxy(5,4);cout << "[1] - Adicionar uma palavra           " << endl;
+        gotoxy(5,5);cout << "[2] - Exibir as palavras existentes   " << endl;
+        gotoxy(5,6);cout << "[3] - Deletar uma palavra             " << endl;
+        gotoxy(5,7);cout << "[4] - Atualizar uma palavra           " << endl;
+        gotoxy(5,8);cout << "[0] - Sair do programa                " << endl;
+
+        gotoxy(42,3); printf("%c", 191);
+        for (int j=4; j<=8;j++){
+            gotoxy(3,j); printf("%c", 179);
+        }
+        for (int c=4; c<=8;c++){
+            gotoxy(42,c); printf("%c", 179);
+        }
+        gotoxy(3,9); printf("%c", 192);
+        gotoxy(42,9); printf("%c", 217);
+        for (int k=4;k<=41;k++){
+            gotoxy(k,9); printf("%c", 196);
+        }
+        gotoxy(4,10);cout << "Selecione uma opcao: ";
         cin >> menu;
         cin.ignore();
 
@@ -374,13 +415,18 @@ int main(){
             case 1:
                 system("cls");
 
-                cout << "Informe a palavra: ";
-                cin.getline(palavra, MAX_PALAVRA);
-
-                cout << "Informe a descricao: ";
-                cin.getline(descricao, MAX_DESCRICAO);
-
+                gotoxy(1,2); cout << "               MENU ADICIONAR             \n\n\n";
+                for (int i=4;i<=41;i++){
+                    gotoxy(i,3); printf("%c", 196);
+                }
+                gotoxy(5,4); printf("%c", 254);
+                gotoxy(7,4);cout << "Informe a palavra(MAX 50 caracteres): " << endl;
+                gotoxy(44,4);cin.getline(palavra, MAX_PALAVRA);
+                gotoxy(5,5); printf("%c", 254);
+                gotoxy(7,5);cout << "Informe a descricao(MAX 500 caracteres):" << endl;
+                gotoxy(48,5);cin.getline(descricao, MAX_DESCRICAO);
                 inserirPalavra(&inicio, &fim, palavra, descricao);
+                system("cls");
 
                 break;
             case 2:
@@ -446,9 +492,11 @@ int main(){
             default:
                 system("cls");
                 cout << "Opcao invalida, tente novamente\n\n";
+                system("pause");
                 break;
+
         }
     }
 
-    return 0;
+    system("pause");
 }
