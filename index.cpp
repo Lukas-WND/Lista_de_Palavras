@@ -377,8 +377,8 @@ void carregarArquivo(ListaLetras **inicio, ListaLetras **fim){
 int main(){
     ListaLetras *inicio= NULL;
     ListaLetras *fim = NULL;
-    int menu = 1;
-    char palavra[MAX_PALAVRA], descricao[MAX_DESCRICAO], opcao;
+    //int menu = 1;
+    char palavra[MAX_PALAVRA], descricao[MAX_DESCRICAO], opcao, menu = '!';
 
     carregarArquivo(&inicio, &fim);
 
@@ -412,7 +412,7 @@ int main(){
         cin.ignore();
 
         switch (menu) {
-            case 1:
+            case '1':
                 system("cls");
 
                 gotoxy(1,2); cout << "               MENU ADICIONAR             \n\n\n";
@@ -429,11 +429,11 @@ int main(){
                 system("cls");
 
                 break;
-            case 2:
+            case '2':
                 exibirPalavras(inicio, fim);
 
                 break;
-            case 3:
+            case '3':
                 system("cls");
 
                 cout << "Informe a palavra: ";
@@ -442,7 +442,7 @@ int main(){
                 deletarPalavra(&inicio, &fim, palavra);
 
                 break;
-            case 4:
+            case '4':
                 system("cls");
 
                 cout << "Informe a palavra que deseja atualizar: ";
@@ -485,7 +485,7 @@ int main(){
                 system("cls");
 
                 break;
-            case 0:
+            case '0':
                 system("cls");
                 cout << "Ate a proxima!";
                 break;
