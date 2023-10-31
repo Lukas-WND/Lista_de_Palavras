@@ -7,6 +7,7 @@
 
 #define MAX_PALAVRA 50
 #define MAX_DESCRICAO 500
+#define DICIONARIO "dicionario.txt"
 
 using namespace std;
 
@@ -111,6 +112,30 @@ ListaPalavras *buscarPalavraAnterior(ListaLetras *letra, char *palavra){
     return NULL;
 }
 
+void salvarArquivo(ListaLetras *inicio, ListaLetras *fim){
+    FILE *arq;
+
+    arq = fopen(DICIONARIO, "w");
+
+    if(arq == NULL){
+        cout << "Erro ao abrir o arquivo" << endl;
+    } else {
+        ListaLetras *aux = inicio;
+
+        while (aux != NULL) {
+            ListaPalavras *palavra = aux->inicioPalavras;
+
+            while(palavra != NULL){
+                fprintf(arq, "%s/%s\n", palavra->palavra, palavra->descricao);
+                palavra = palavra->proxPalavra;
+            }
+            aux = aux->proxLetra;
+        }
+    }
+
+    fclose(arq);
+}
+
 void inserirLetra(ListaLetras **inicio, ListaLetras **fim, char letra){
     ListaLetras *novaLetra = new ListaLetras();
 
@@ -162,6 +187,8 @@ void inserirPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra, char
         }
 
         letra->qtdPalavras++;
+
+        salvarArquivo(*inicio, *fim);
 
     } else {
         // inserirErro();
@@ -256,6 +283,8 @@ void deletarPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra){
 
                 delete(pAtual);
                 letra->qtdPalavras--;
+
+                salvarArquivo(*inicio, *fim);
             } else {
                 // palavra nao encontrada
                 // inserirErro();
@@ -291,10 +320,33 @@ void atualizarPalavra(ListaLetras **inicio,
             deletarPalavra(inicio, fim, palavra->palavra);
             inserirPalavra(inicio, fim, novaPalavra, novaDescricao);
         }
+        salvarArquivo(*inicio, *fim);
     } else {
         // inserirErro();
     }
+}
 
+void carregarArquivo(ListaLetras **inicio, ListaLetras **fim){
+    FILE *arq;
+
+    arq = fopen(DICIONARIO, "r");
+
+    if(arq == NULL){
+        cout << "Erro ao abrir o arquivo" << endl;
+    } else {
+        char linha[1000];
+
+        while(fgets(linha, sizeof(linha), arq) != NULL){
+            char *palavra, *descricao;
+            
+            palavra = strtok(linha, "/");
+            descricao = strtok(NULL, "/");
+
+            inserirPalavra(inicio, fim, palavra, descricao);
+        }
+    }
+
+    fclose(arq);
 }
 
 int main(){
@@ -302,6 +354,8 @@ int main(){
     ListaLetras *fim = NULL;
     int menu = 1;
     char palavra[MAX_PALAVRA], descricao[MAX_DESCRICAO], opcao;
+
+    carregarArquivo(&inicio, &fim);
 
     while(menu != 0){
         cout << "************ MENU PRINCIPAL ************\n\n";
@@ -396,5 +450,5 @@ int main(){
         }
     }
 
-    system("pause");
+    return 0;
 }
