@@ -5,7 +5,6 @@
 #include <iostream>
 #include <string.h>
 #include <windows.h>
-#include <time.h>
 
 #define DICIONARIO "DicionarioPalavras.txt"
 #define MAX_PALAVRA 50
@@ -53,6 +52,30 @@ void quadro (){
         gotoxy(i,12); printf("%c", 205);
     }
     gotoxy(45,12); printf("%c", 188);
+}
+
+void exibirMensagem (char *frase){
+    int tamanho = strlen(frase);
+
+    for (int i=4; i<=tamanho+9;i++){
+        gotoxy(i,3);printf("%c", 196);
+    }
+    gotoxy(7,5);cout<<frase<< endl;
+    gotoxy(3,3); printf("%c", 218);
+    for (int j = 4; j<=6; j++){
+        gotoxy(3,j); printf("%c", 179);
+    }
+    gotoxy(3,7); printf("%c", 192);
+    for (int c=4; c<=tamanho+9;c++){
+        gotoxy(c,7);printf("%c", 196);
+    }
+    gotoxy(tamanho+10,3);printf("%c", 191);
+    gotoxy(tamanho+10,7);printf("%c", 217);
+    for (int d = 4; d<=6; d++){
+        gotoxy(tamanho+10,d); printf("%c", 179);
+    }
+
+    gotoxy(2,9);system("pause");
 }
 
 bool validPalavra(char *palavra){ // Verifica se o caracter está entre 'A' e 'Z' ou 'a' e 'z'
@@ -250,6 +273,7 @@ void exibirPalavras(ListaLetras *inicio, ListaLetras *fim){
 
         cout << "Informe a letra que deseja consultar: ";
         cin >> letra;
+        cin.ignore();
         letra = toupper(letra);
 
         letraE = buscarLetra(inicio, fim, letra);
@@ -415,8 +439,8 @@ int main(){
             case '1':
                 system("cls");
 
-                gotoxy(1,2); cout << "               MENU ADICIONAR             \n\n\n";
-                for (int i=4;i<=41;i++){
+                gotoxy(27,2); cout << "               MENU ADICIONAR             \n\n\n";
+                for (int i=4;i<=90;i++){
                     gotoxy(i,3); printf("%c", 196);
                 }
                 gotoxy(5,4); printf("%c", 254);
@@ -435,12 +459,24 @@ int main(){
                 break;
             case '3':
                 system("cls");
-
-                cout << "Informe a palavra: ";
+                exibirPalavras(inicio, fim);
+                //cin.ignore();
+                for (int i=4;i<=27;i++){
+                    gotoxy(i,2); printf("%c", 196);
+                }
+                gotoxy(28,2); cout << " MENU DELETAR\n\n\n";
+                for (int v=42;v<=63;v++){
+                    gotoxy(v,2); printf("%c", 196);
+                }
+                gotoxy(4,3); printf("%c", 254);
+                gotoxy(6,3);cout << "Informe a palavra: ";
                 cin.getline(palavra, MAX_PALAVRA);
+                system("cls");
+                exibirMensagem("PALAVRA DELETADA");
+                //cout << "PALAVRA DELETADA";
 
                 deletarPalavra(&inicio, &fim, palavra);
-
+                system("cls");
                 break;
             case '4':
                 system("cls");
@@ -494,7 +530,6 @@ int main(){
                 cout << "Opcao invalida, tente novamente\n\n";
                 system("pause");
                 break;
-
         }
     }
 
