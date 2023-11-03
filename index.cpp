@@ -6,7 +6,7 @@
 #include <string.h>
 #include <windows.h>
 
-#define DICIONARIO "DicionarioPalavras.txt"
+#define DICIONARIO "dicionario.txt"
 #define MAX_PALAVRA 50
 #define MAX_DESCRICAO 500
 
@@ -70,9 +70,11 @@ void quadro()
     printf("%c", 188);
 }
 
-void exibirMensagem(char *frase)
+void exibirMensagem(const char *frase)
 {
     int tamanho = strlen(frase);
+
+    system("cls");
 
     for (int i = 4; i <= tamanho + 9; i++)
     {
@@ -109,12 +111,10 @@ void exibirMensagem(char *frase)
     system("pause");
 }
 
-bool validPalavra(char *palavra)
-{ // Verifica se o caracter está entre 'A' e 'Z' ou 'a' e 'z'
+bool validPalavra(char *palavra) { // Verifica se o caracter está entre 'A' e 'Z' ou 'a' e 'z'
     int i = 0;
 
-    while (palavra[i] != '\0')
-    {
+    while (palavra[i] != '\0') {
 
         if ((palavra[i] < 65 || palavra[i] > 122) || (palavra[i] > 90 && palavra[i] < 97))
         {
@@ -234,6 +234,7 @@ ListaPalavras *buscarPalavraAnterior(ListaLetras *letra, char *palavra)
 
     return NULL;
 }
+
 void salvarArquivo(ListaLetras *inicio, ListaLetras *fim)
 {
     FILE *arq;
@@ -242,7 +243,7 @@ void salvarArquivo(ListaLetras *inicio, ListaLetras *fim)
 
     if (arq == NULL)
     {
-        cout << "Erro ao abrir o arquivo" << endl;
+        exibirMensagem("Erro ao abrir arquivo");
     }
     else
     {
@@ -264,8 +265,7 @@ void salvarArquivo(ListaLetras *inicio, ListaLetras *fim)
     fclose(arq);
 }
 
-void inserirLetra(ListaLetras **inicio, ListaLetras **fim, char letra)
-{
+void inserirLetra(ListaLetras **inicio, ListaLetras **fim, char letra) {
     ListaLetras *novaLetra = new ListaLetras();
 
     novaLetra->letra = toupper(letra);
@@ -300,8 +300,7 @@ void inserirPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra, char
         palavra = strupr(palavra);
         descricao[0] = toupper(descricao[0]);
 
-        if (buscarLetra(*inicio, *fim, palavra[0]) == NULL)
-        {
+        if (buscarLetra(*inicio, *fim, palavra[0]) == NULL) {
             inserirLetra(inicio, fim, palavra[0]);
         }
 
@@ -311,14 +310,11 @@ void inserirPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra, char
         strcpy(novaPalavra->palavra, palavra);
         strcpy(novaPalavra->descricao, descricao);
 
-        if (letra->inicioPalavras == NULL)
-        {
+        if (letra->inicioPalavras == NULL) {
             letra->inicioPalavras = novaPalavra;
             letra->fimPalavras = novaPalavra;
             novaPalavra->proxPalavra = NULL;
-        }
-        else
-        {
+        } else {
             letra->fimPalavras->proxPalavra = novaPalavra;
             letra->fimPalavras = letra->fimPalavras->proxPalavra;
             novaPalavra->proxPalavra = NULL;
@@ -329,7 +325,7 @@ void inserirPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra, char
     }
     else
     {
-        // inserirErro();
+        exibirMensagem("Palavra contem um digito invalido");
     }
 }
 
@@ -339,86 +335,16 @@ void exibirLetras(ListaLetras *inicio, ListaLetras *fim)
 
     if (inicio == NULL)
     {
-        cout << "Nenhuma letra esta disponivel!\n\n";
+        exibirMensagem("Nenhuma letra disponivel");
     }
     else
     {
         while (aux != NULL)
         {
-            cout << aux->letra << " " << aux->qtdPalavras << "; "<<endl;
+            cout << aux->letra << " " << aux->qtdPalavras << "; ";
             aux = aux->proxLetra;
         }
     }
-}
-
-void exibirPalavras(ListaLetras *inicio, ListaLetras *fim)
-{
-    char letra;
-
-    ListaLetras *letraE;
-
-    system("cls");
-
-    if (inicio == NULL)
-    {
-        exibirMensagem("Nenhuma palavra foi cadastrada ainda!");
-    }
-    else
-    {
-        cout << "Letras disponiveis para consulta\n\n";
-        exibirLetras(inicio, fim);
-        cout << "\n\n";
-
-        cout << "Informe a letra que deseja consultar: ";
-        cin >> letra;
-        cin.ignore();
-        letra = toupper(letra);
-
-        letraE = buscarLetra(inicio, fim, letra);
-        system("cls");
-        if (letraE == NULL)
-        {
-            exibirMensagem("Opcao nao identificada");
-        }
-        else
-        {
-            ListaPalavras *aux = letraE->inicioPalavras;
-            char palavra[MAX_PALAVRA];
-
-            cout << "Palavras cadastradas:\n\n";
-            while (aux != NULL)
-            {
-                cout << aux->palavra << endl;
-                aux = aux->proxPalavra;
-            }
-
-            cout << "Informe a palavra que deseja consultar: ";
-            cin.getline(palavra, MAX_PALAVRA);
-
-            if(validPalavra(palavra)){
-                aux = letraE->inicioPalavras;
-
-                while(aux != NULL){
-                    if(strcmp(aux->palavra, strupr(palavra)) == 0){
-                        system("cls");
-                        cout << aux->palavra << ": " << aux->descricao << endl;
-                        aux->qtdPesquisas++;
-                        break;
-                    } else {
-                        aux = aux->proxPalavra;
-                    }
-                }
-            } else {
-                exibirMensagem("Digito invalido");
-            }
-
-            cout << "\n\n";
-            system("pause");
-            system("cls");
-        }
-    }
-    //system("pause");
-    system("cls");
 }
 
 void exibirPorRelevancia(ListaLetras *inicio, ListaLetras *fim, char *palavra){
@@ -449,6 +375,97 @@ void exibirPorRelevancia(ListaLetras *inicio, ListaLetras *fim, char *palavra){
     }
 
     system("pause");
+}
+
+void exibirPalavra(ListaPalavras palavra){
+    system("cls");
+    cout << palavra.palavra << ": " << palavra.descricao << endl;
+    system("pause");
+}
+
+void listarDicionario(ListaLetras *inicio, ListaLetras *fim){
+
+    system("cls");
+
+    if(inicio == NULL){
+        cout << "Nenhuma palavra cadastrada!" << endl;
+    } else {
+        ListaLetras *auxLetras = inicio;
+
+        while(auxLetras != NULL){
+            cout << auxLetras->letra << "              " << auxLetras->qtdPalavras << endl;
+            cout << "----------------" << endl;
+
+            if(auxLetras->inicioPalavras == NULL){
+                cout << "Lista de Palavras vazia" << endl;
+            } else {
+                ListaPalavras *auxPalavras = auxLetras->inicioPalavras;
+
+                while(auxPalavras != NULL){
+                    cout << auxPalavras->palavra << endl;
+
+                    auxPalavras = auxPalavras->proxPalavra;
+                }
+            }
+
+            cout << "\n\n";
+            auxLetras = auxLetras->proxLetra;
+        }
+    }
+}
+
+void menuExibir(ListaLetras *inicio, ListaLetras *fim){
+    char menu = ' ';
+    char palavra[MAX_PALAVRA];
+
+    while(menu != '0'){
+        system("cls");
+        cout << "MENU DE PESQUISA" << endl;
+        cout << "[1] - Pesquisar por palavra   " << endl;
+        cout << "[2] - Pesquisar por relevancia" << endl;
+        cout << "[0] - Voltar ao menu principal" << endl;
+        cout << "Selecione a opcao: ";
+        cin >> menu;
+        cin.ignore();
+
+        switch (menu) {
+            case '1':
+                listarDicionario(inicio, fim);
+                cout << "Informe a palavra que deseja buscar: ";
+                cin.getline(palavra, MAX_PALAVRA);
+
+                if(validPalavra(palavra)){
+                    ListaLetras *letra = buscarLetra(inicio, fim, toupper(palavra[0]));
+
+                    if(letra == NULL){
+                        exibirMensagem("Palavra nao encontrada");
+                    } else {
+                        ListaPalavras *aux = letra->inicioPalavras;
+
+                        if(aux == NULL){
+                            exibirMensagem("Lista de palavras vazia");
+                        } else {
+                            while(aux != NULL){
+                                if(aux->proxPalavra == NULL && strcmp(aux->palavra, strupr(palavra)) != 0){
+                                    exibirMensagem("Palavra nao encontrada");
+                                } else if(strcmp(aux->palavra, strupr(palavra)) == 0){
+                                    exibirPalavra(*aux);
+                                    break;
+                                }
+
+                                aux = aux->proxPalavra;
+                            }
+                        }
+                    }
+                }
+                break;
+            case '2':
+                cout << "Informe a palavra que deseja buscar: ";
+                cin.getline(palavra, MAX_PALAVRA);
+                exibirPorRelevancia(inicio, fim, palavra);
+                break;
+        }
+    }
 }
 
 void deletarLetra(ListaLetras **inicio, ListaLetras **fim, ListaLetras *letra)
@@ -565,40 +582,42 @@ void atualizarPalavra(ListaLetras **inicio,
     }
 }
 
-void carregarArquivo(ListaLetras **inicio, ListaLetras **fim)
-{
+void carregarArquivo(ListaLetras **inicio, ListaLetras **fim) {
     FILE *arq;
-
     arq = fopen(DICIONARIO, "r");
 
-    if (arq == NULL)
-    {
+    if (arq == NULL) {
         cout << "Erro ao abrir o arquivo" << endl;
     }
-    else
-    {
-        char linha[1000];
+    else {
+        char linha[MAX_PALAVRA + MAX_DESCRICAO + 2];
 
-        while (fgets(linha, sizeof(linha), arq) != NULL)
-        {
-            char *palavra, *descricao;
+        while (fgets(linha, sizeof(linha), arq) != NULL) {
+            char *palavra = strtok(linha, "/");
+            char *descricao = strtok(NULL, "/");
 
-            palavra = strtok(linha, "/");
-            descricao = strtok(NULL, "/");
+            if (palavra && descricao) {
+                // Remove caracteres de quebra de linha, se houver
+                palavra = strtok(palavra, "\n");
+                descricao = strtok(descricao, "\n");
 
-            inserirPalavra(inicio, fim, palavra, descricao);
+                inserirPalavra(inicio, fim, palavra, descricao);
+            }
+            else {
+                cout << "Erro ao processar linha: " << linha << endl;
+            }
         }
     }
 
     fclose(arq);
 }
 
+
 int main()
 {
     ListaLetras *inicio = NULL;
     ListaLetras *fim = NULL;
-    // int menu = 1;
-    char palavra[MAX_PALAVRA], descricao[MAX_DESCRICAO], opcao, menu = '!';
+    char palavra[MAX_PALAVRA], descricao[MAX_DESCRICAO], opcao = ' ', menu = '!';
 
     carregarArquivo(&inicio, &fim);
 
@@ -680,12 +699,12 @@ int main()
 
                 break;
             case '2':
-                exibirPalavras(inicio, fim);
+                menuExibir(inicio, fim);
 
                 break;
             case '3':
                 system("cls");
-                exibirPalavras(inicio, fim);
+                listarDicionario(inicio, fim);
                 // cin.ignore();
                 for (int i = 4; i <= 27; i++)
                 {
