@@ -345,7 +345,7 @@ void exibirLetras(ListaLetras *inicio, ListaLetras *fim)
     {
         while (aux != NULL)
         {
-            cout << aux->letra << " " << aux->qtdPalavras << "; ";
+            cout << aux->letra << " " << aux->qtdPalavras << "; "<<endl;
             aux = aux->proxLetra;
         }
     }
@@ -361,7 +361,7 @@ void exibirPalavras(ListaLetras *inicio, ListaLetras *fim)
 
     if (inicio == NULL)
     {
-        cout << "Nenhuma palavra foi cadastrada ainda!\n\n";
+        exibirMensagem("Nenhuma palavra foi cadastrada ainda!");
     }
     else
     {
@@ -375,7 +375,7 @@ void exibirPalavras(ListaLetras *inicio, ListaLetras *fim)
         letra = toupper(letra);
 
         letraE = buscarLetra(inicio, fim, letra);
-
+        system("cls");
         if (letraE == NULL)
         {
             exibirMensagem("Opcao nao identificada");
@@ -413,9 +413,11 @@ void exibirPalavras(ListaLetras *inicio, ListaLetras *fim)
             }
 
             cout << "\n\n";
+            system("pause");
+            system("cls");
         }
     }
-    system("pause");
+    //system("pause");
     system("cls");
 }
 
