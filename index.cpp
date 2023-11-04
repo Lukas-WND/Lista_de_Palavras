@@ -347,6 +347,147 @@ void exibirLetras(ListaLetras *inicio, ListaLetras *fim)
     }
 }
 
+int exibirApenasPalavra(ListaLetras *inicio, ListaLetras *fim){
+
+    int y = 4;
+    system("cls");
+    if (inicio == NULL){
+        exibirMensagem("Nenhuma palavra cadastrada!");
+    } else {
+        ListaLetras *auxLetras = inicio;
+
+        while (auxLetras != NULL){
+            gotoxy(1,y);printf("%c", 218);
+            for (int i= 2; i<=49; i++){
+                gotoxy(i,y); printf("%c", 196);
+            }
+            gotoxy(50,y); printf("%c", 191);
+            for (int j=y+1; j<=y+3;j++){
+                gotoxy(50,j); printf("%c", 179);
+            }
+            for (int j=y+1; j<=y+3;j++){
+                gotoxy(1,j); printf("%c", 179);
+            }
+            gotoxy(1,y+4); printf("%c", 195);
+            gotoxy(50,y+4); printf("%c", 180);
+            for (int i= 2; i<=49; i++){
+                gotoxy(i,y+4); printf("%c", 196);
+            }
+            gotoxy(18,y+2); cout << "Letra " << auxLetras->letra << " = "<< auxLetras-> qtdPalavras;
+            y=y+5;
+            if (auxLetras ->inicioPalavras ==NULL){
+               gotoxy(y,15);cout << "Lisra de Palavras Vazias";
+               y=y+1;
+            } else {
+                ListaPalavras *auxPalavras = auxLetras->inicioPalavras;
+                while(auxPalavras != NULL){
+                    gotoxy(1,y); printf("%c", 179);
+                    gotoxy(50,y); printf("%c", 179);
+                    gotoxy(2,y); cout << auxPalavras->palavra;
+                    auxPalavras=auxPalavras->proxPalavra;
+                    y=y+1;
+                }
+                gotoxy(1,y);printf("%c", 192);
+                gotoxy(50,y);printf("%c", 217);
+                for(int i=2;i<=49;i++){
+                    gotoxy(i,y);printf("%c", 196);
+                }
+            }
+            y=y+1;
+            auxLetras = auxLetras->proxLetra;
+        }
+
+    }
+    cout<< endl;
+    return y;
+}
+
+int exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim){
+
+    int y = 4;
+    system("cls");
+    if (inicio == NULL){
+        exibirMensagem("Nenhuma palavra cadastrada!");
+    } else{
+        ListaLetras *auxLetras = inicio;
+
+        while(auxLetras != NULL){
+            int c=0;
+            gotoxy(1,y);printf("%c", 218);
+            for(int i=2;i<=60;i++){
+                gotoxy(i,y); printf("%c", 196);
+            }
+            gotoxy(61,y); printf("%c", 191);
+            for (int j=y+1; j<=y+3;j++){
+                gotoxy(61,j); printf("%c", 179);
+            }
+            for (int j=y+1; j<=y+3;j++){
+                gotoxy(1,j); printf("%c", 179);
+            }
+            gotoxy(1,y+4); printf("%c", 195);
+            gotoxy(61,y+4); printf("%c", 180);
+            for(int i=2;i<=60;i++){
+                if (i==31){
+                    gotoxy(i,y+4); printf("%c", 194);
+                }else{
+                    gotoxy(i,y+4); printf("%c", 196);
+                }
+            }
+            gotoxy(25,y+2); cout << "Letra " << auxLetras->letra << " = "<< auxLetras-> qtdPalavras;
+            y=y+4;
+            if (auxLetras -> inicioPalavras == NULL){
+                gotoxy(y,15);cout << "Lisra de Palavras Vazias";
+                y=y+1;
+            }else {
+                ListaPalavras *auxPalavras = auxLetras->inicioPalavras;
+                while(auxPalavras!=NULL){
+
+                    c++;
+                    gotoxy(1,y);printf("%c", 195);
+                    if(c==1){
+                    gotoxy(31,y);printf("%c", 194);
+                    }else{
+                        gotoxy(31,y);printf("%c", 197);
+                    }
+                    gotoxy(61,y+1); printf("%c", 180);
+                    gotoxy(1,y+1);printf("%c", 179);
+                    gotoxy(31,y+1);printf("%c", 179);
+                    gotoxy(61,y+1); printf("%c", 179);
+                    gotoxy(2,y+1); cout << auxPalavras->palavra;
+                    //Alteração necessaria para quebrar descrição
+                    gotoxy(32,y+1);cout << auxPalavras->descricao;
+                    //Alteração necessaria para quebrar descrição
+                    auxPalavras=auxPalavras->proxPalavra;
+                    y=y+2;
+                    gotoxy(1,y);printf("%c", 195);
+                    gotoxy(61,y); printf("%c", 180);
+                    for(int i=2;i<=60;i++){
+                        if (i==31){
+                            gotoxy(i,y); printf("%c", 197);
+                        }else{
+                            gotoxy(i,y); printf("%c", 196);
+                        }
+                    }
+
+                }
+                gotoxy(1,y);printf("%c", 192);
+                gotoxy(61,y);printf("%c", 217);
+                for(int i=2;i<=60;i++){
+                    if (i==31){
+                        gotoxy(i,y); printf("%c", 193);
+                    }else{
+                        gotoxy(i,y); printf("%c", 196);
+                    }
+                }
+                y=y+1;
+            }
+        auxLetras = auxLetras->proxLetra;
+        }
+    }
+
+cout<< endl;
+}
+
 void exibirPorRelevancia(ListaLetras *inicio, ListaLetras *fim, char *palavra){
     if(validPalavra(palavra)){
         if(inicio != NULL){
@@ -362,6 +503,7 @@ void exibirPorRelevancia(ListaLetras *inicio, ListaLetras *fim, char *palavra){
 
                     if(achou != NULL){
                         cout << auxPalavras->palavra << ": " << auxPalavras->descricao << endl;
+                        system("pause");
                     }
 
                     auxPalavras = auxPalavras->proxPalavra;
@@ -369,12 +511,14 @@ void exibirPorRelevancia(ListaLetras *inicio, ListaLetras *fim, char *palavra){
 
                 auxLetras = auxLetras->proxLetra;
             }
+        } else {
+        exibirMensagem("Nenhuma palavra cadastrada!");
         }
     } else {
         exibirMensagem("Digito invalido");
     }
 
-    system("pause");
+
 }
 
 void exibirPalavra(ListaPalavras palavra){
@@ -388,7 +532,7 @@ void listarDicionario(ListaLetras *inicio, ListaLetras *fim){
     system("cls");
 
     if(inicio == NULL){
-        cout << "Nenhuma palavra cadastrada!" << endl;
+        exibirMensagem("Nenhuma palavra cadastrada!");
     } else {
         ListaLetras *auxLetras = inicio;
 
@@ -417,20 +561,47 @@ void listarDicionario(ListaLetras *inicio, ListaLetras *fim){
 void menuExibir(ListaLetras *inicio, ListaLetras *fim){
     char menu = ' ';
     char palavra[MAX_PALAVRA];
+    int y;
 
     while(menu != '0'){
         system("cls");
-        cout << "MENU DE PESQUISA" << endl;
-        cout << "[1] - Pesquisar por palavra   " << endl;
-        cout << "[2] - Pesquisar por relevancia" << endl;
-        cout << "[0] - Voltar ao menu principal" << endl;
-        cout << "Selecione a opcao: ";
+        quadro();
+        gotoxy(42,3);printf("%c", 191);
+        for (int j = 4; j <= 9; j++)
+        {
+            gotoxy(3,j);printf("%c", 179);
+        }
+        for (int c = 4; c <= 9; c++)
+        {
+            gotoxy(42,c);printf("%c", 179);
+        }
+        gotoxy(3,10);printf("%c", 192);
+        gotoxy(42,10);printf("%c", 217);
+        for (int k = 4; k <= 41; k++)
+        {
+            gotoxy(k,10);printf("%c", 196);
+        }
+        gotoxy(3, 3);printf("%c", 218);
+        for (int i = 4; i <= 41; i++)
+        {
+            gotoxy(i, 3);
+            printf("%c", 196);
+        }
+        gotoxy(15,2);cout << "MENU DE PESQUISA";
+        gotoxy(5,5);cout << "[1] - Pesquisar por palavra   " ;
+        gotoxy(5,6);cout << "[2] - Pesquisar por relevancia" ;
+        gotoxy(5,7);cout << "[0] - Voltar ao menu principal" ;
+        gotoxy(5,8);cout << "Selecione a opcao: ";
         cin >> menu;
         cin.ignore();
 
         switch (menu) {
             case '1':
-                listarDicionario(inicio, fim);
+                //listarDicionario(inicio, fim);
+
+                exibirPalavraeDescricao(inicio,fim);
+                //y=exibirApenasPalavra(inicio,fim);
+                //gotoxy(3,y+1);printf("%c",254);
                 cout << "Informe a palavra que deseja buscar: ";
                 cin.getline(palavra, MAX_PALAVRA);
 
@@ -460,12 +631,14 @@ void menuExibir(ListaLetras *inicio, ListaLetras *fim){
                 }
                 break;
             case '2':
+                system("cls");
                 cout << "Informe a palavra que deseja buscar: ";
                 cin.getline(palavra, MAX_PALAVRA);
                 exibirPorRelevancia(inicio, fim, palavra);
                 break;
         }
     }
+    system("cls");
 }
 
 void deletarLetra(ListaLetras **inicio, ListaLetras **fim, ListaLetras *letra)
