@@ -969,24 +969,27 @@ int main()
 
                 break;
             case '3':
+                int y;
                 system("cls");
-                listarDicionario(inicio, fim);
+                //listarDicionario(inicio, fim);
+                y=exibirApenasPalavra(inicio,fim);
+                y++;
                 // cin.ignore();
-                for (int i = 4; i <= 27; i++)
+                for (int i = 1; i <= 24; i++)
                 {
-                    gotoxy(i, 2);
+                    gotoxy(i, y);
                     printf("%c", 196);
                 }
-                gotoxy(28, 2);
+                gotoxy(25, y);
                 cout << " MENU DELETAR\n\n\n";
-                for (int v = 42; v <= 63; v++)
+                for (int v = 39; v <= 60; v++)
                 {
-                    gotoxy(v, 2);
+                    gotoxy(v, y);
                     printf("%c", 196);
                 }
-                gotoxy(4, 3);
+                gotoxy(1, y+1);
                 printf("%c", 254);
-                gotoxy(6, 3);
+                gotoxy(3, y+1);
                 cout << "Informe a palavra: ";
                 cin.getline(palavra, MAX_PALAVRA);
                 // cout << "PALAVRA DELETADA";
