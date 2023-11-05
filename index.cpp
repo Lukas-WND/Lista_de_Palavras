@@ -37,6 +37,39 @@ void gotoxy(int x, int y)
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
+void quadroMP()
+{
+
+    gotoxy(0, 0);
+    printf("%c", 201);
+    for (int i = 1; i <= 44; i++)
+    {
+        gotoxy(i, 0);
+        printf("%c", 205);
+    }
+    gotoxy(45, 0);
+    printf("%c", 187);
+    for (int c = 1; c <= 12; c++)
+    {
+        gotoxy(0, c);
+        printf("%c", 186);
+    }
+    for (int j = 1; j <= 12; j++)
+    {
+        gotoxy(45, j);
+        printf("%c", 186);
+    }
+    gotoxy(0, 13);
+    printf("%c", 200);
+    for (int i = 1; i <= 44; i++)
+    {
+        gotoxy(i, 13);
+        printf("%c", 205);
+    }
+    gotoxy(45, 13);
+    printf("%c", 188);
+}
+
 void quadro()
 {
 
@@ -793,9 +826,9 @@ int compararPalavras(const void *a, const void *b) {
 
 void ordenarAlfabeticamente(ListaLetras *inicio, ListaLetras *fim) {
     int totalPalavras = 0;
-    
+
     ListaLetras *letra = inicio;
-    
+
     // Conta o número total de palavras
     while (letra != NULL) {
         totalPalavras += letra->qtdPalavras;
@@ -854,7 +887,7 @@ int main()
 
     while (menu != '0')
     {
-        quadro();
+        quadroMP();
         gotoxy(1, 2);
         cout << "               MENU PRINCIPAL             \n\n\n";
         gotoxy(3, 3);
@@ -873,32 +906,32 @@ int main()
         gotoxy(5, 7);
         cout << "[4] - Atualizar uma palavra           " << endl;
         gotoxy(5, 8);
-        cout << "[5] - Ordenar palavras alfabeticamente" << endl;
+        cout << "[5] - Ordenar alfabeticamente" << endl;
         gotoxy(5, 9);
         cout << "[0] - Sair do programa                " << endl;
 
         gotoxy(42, 3);
         printf("%c", 191);
-        for (int j = 4; j <= 8; j++)
+        for (int j = 4; j <= 9; j++)
         {
             gotoxy(3, j);
             printf("%c", 179);
         }
-        for (int c = 4; c <= 8; c++)
+        for (int c = 4; c <= 9; c++)
         {
             gotoxy(42, c);
             printf("%c", 179);
         }
-        gotoxy(3, 9);
+        gotoxy(3, 10);
         printf("%c", 192);
-        gotoxy(42, 9);
+        gotoxy(42, 10);
         printf("%c", 217);
         for (int k = 4; k <= 41; k++)
         {
-            gotoxy(k, 9);
+            gotoxy(k, 10);
             printf("%c", 196);
         }
-        gotoxy(4, 10);
+        gotoxy(4, 11);
         cout << "Selecione uma opcao: ";
         cin >> menu;
         cin.ignore();
@@ -1025,7 +1058,7 @@ int main()
             case '6':
                 system("cls");
                 ordenarAlfabeticamente(inicio, fim);
-                exibirMensagem("Palavras ordenadas alfabeticamente com sucesso!"); 
+                exibirMensagem("Palavras ordenadas alfabeticamente com sucesso!");
             case '0':
                 system("cls");
                 cout << "Ate a proxima!";
