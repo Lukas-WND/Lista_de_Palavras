@@ -380,7 +380,7 @@ void exibirLetras(ListaLetras *inicio, ListaLetras *fim)
     }
 }
 
-int exibirApenasPalavra(ListaLetras *inicio, ListaLetras *fim){
+int exibirApenasPalavra(ListaLetras *inicio, ListaLetras *fim, const char *frase){
 
     int y = 4;
     system("cls");
@@ -388,7 +388,8 @@ int exibirApenasPalavra(ListaLetras *inicio, ListaLetras *fim){
         exibirMensagem("Nenhuma palavra cadastrada!");
     } else {
         ListaLetras *auxLetras = inicio;
-
+        gotoxy(2,2);printf("%c",254);
+        gotoxy(4,2); cout<< frase;
         while (auxLetras != NULL){
             gotoxy(1,y);printf("%c", 218);
             for (int i= 2; i<=49; i++){
@@ -435,7 +436,7 @@ int exibirApenasPalavra(ListaLetras *inicio, ListaLetras *fim){
     return y;
 }
 
-int exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim){
+int exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim, const char *frase){
 
     int y = 4;
     system("cls");
@@ -443,6 +444,8 @@ int exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim){
         exibirMensagem("Nenhuma palavra cadastrada!");
     } else{
         ListaLetras *auxLetras = inicio;
+
+        gotoxy(26,2); cout<< frase;
 
         while(auxLetras != NULL){
             int c=0;
@@ -630,11 +633,8 @@ void menuExibir(ListaLetras *inicio, ListaLetras *fim){
 
         switch (menu) {
             case '1':
-                //listarDicionario(inicio, fim);
-
-                exibirPalavraeDescricao(inicio,fim);
-                //y=exibirApenasPalavra(inicio,fim);
-                //gotoxy(3,y+1);printf("%c",254);
+                y=exibirApenasPalavra(inicio,fim, "Pesquisa por Palavra");
+                gotoxy(3,y+1);printf("%c",254);
                 cout << "Informe a palavra que deseja buscar: ";
                 cin.getline(palavra, MAX_PALAVRA);
 
@@ -882,6 +882,7 @@ int main()
     ListaLetras *inicio = NULL;
     ListaLetras *fim = NULL;
     char palavra[MAX_PALAVRA], descricao[MAX_DESCRICAO], opcao = ' ', menu = '!';
+    int y=0;
 
     carregarArquivo(&inicio, &fim);
 
@@ -908,7 +909,7 @@ int main()
         gotoxy(5, 8);
         cout << "[5] - Ordenar alfabeticamente" << endl;
         gotoxy(5, 9);
-        cout << "[6] - Exibir Dissionario "<< endl;
+        cout << "[6] - Exibir Dicionario "<< endl;
         gotoxy(5, 10);
         cout << "[0] - Sair do programa                " << endl;
 
@@ -971,10 +972,10 @@ int main()
 
                 break;
             case '3':
-                int y;
+                //int y;
                 system("cls");
                 //listarDicionario(inicio, fim);
-                y=exibirApenasPalavra(inicio,fim);
+                y=exibirApenasPalavra(inicio,fim,"DELETAR");
                 y++;
                 // cin.ignore();
                 for (int i = 1; i <= 24; i++)
@@ -983,8 +984,8 @@ int main()
                     printf("%c", 196);
                 }
                 gotoxy(25, y);
-                cout << " MENU DELETAR\n\n\n";
-                for (int v = 39; v <= 60; v++)
+                cout << " DELETAR\n\n\n";
+                for (int v = 34; v <= 60; v++)
                 {
                     gotoxy(v, y);
                     printf("%c", 196);
@@ -1003,10 +1004,12 @@ int main()
                 break;
             case '4':
                 system("cls");
-
+                //int l=0;
+                y=exibirApenasPalavra(inicio,fim,"Atualizar");
+                gotoxy(2,y);
                 cout << "Informe a palavra que deseja atualizar: ";
                 cin.getline(palavra, MAX_PALAVRA);
-
+                system("cls");
                 if (validPalavra(palavra))
                 {
                     ListaPalavras *palavraEncontrada = buscarPalavra(buscarLetra(inicio, fim, palavra[0]), strupr(palavra));
@@ -1014,12 +1017,14 @@ int main()
                     if (palavraEncontrada != NULL)
                     {
                         char novaPalavra[MAX_PALAVRA];
-
-                        cout << "Palavra atual: " << palavraEncontrada->palavra << endl;
-                        cout << "Nova palavra: ";
+                        for(int j=1;j<=2;j++){
+                            gotoxy(0,j);printf("%c",179);
+                        }
+                        gotoxy(1,1);printf("%c ", 254);cout << "Palavra atual: " << palavraEncontrada->palavra << endl;
+                        gotoxy(1,2);printf("%c ", 254);cout << "Nova palavra: ";
                         cin.getline(novaPalavra, MAX_PALAVRA);
-
-                        cout << "\nDescricao atual: " << palavraEncontrada->descricao << "\n\n";
+                        gotoxy(0,3);printf("%c", 179);
+                        gotoxy(1,3);printf("%c ", 254);cout << "Descricao: " << palavraEncontrada->descricao << "\n\n";
                         cout << "Deseja atualizar a descricao de " << novaPalavra << "? [S/N]" << endl;
                         cout << "Digite a opcao: ";
                         cin >> opcao;
@@ -1027,31 +1032,35 @@ int main()
 
                         if (opcao == 'S' || opcao == 's')
                         {
-                            cout << "\nInforme a nova descricao: ";
+                            system("cls");
+                            for(int j=1;j<=2;j++){
+                                gotoxy(0,j);printf("%c",179);
+                            }
+                            gotoxy(1,1);printf("%c ", 254);cout << "Palavra: " << novaPalavra << endl;
+                            gotoxy(1,2);printf("%c ", 254);cout << "Informe a nova descricao: ";
                             cin.getline(descricao, MAX_DESCRICAO);
                             atualizarPalavra(&inicio, &fim, palavraEncontrada, novaPalavra, descricao);
+                            exibirMensagem("Palavra e Descricao Atualizada");
                         }
                         else if (opcao == 'N' || opcao == 'n')
                         {
                             atualizarPalavra(&inicio, &fim, palavraEncontrada, novaPalavra, palavraEncontrada->descricao);
+                            exibirMensagem("Palavra Atualizada");
                         }
                         else
                         {
-                            cout << "\nOpcao nao identificada" << endl;
+                            exibirMensagem("Opcao nao identificada");
                         }
                     }
                     else
                     {
-                        cout << "\nPalavra nao encontrada" << endl;
+                        exibirMensagem("Palavra nao encontrada");
                     }
                 }
                 else
                 {
-                    cout << "\nPalavra Invalida" << endl;
-                    // inserirErro();
+                    exibirMensagem("Palavra Invalida");
                 }
-
-                system("pause");
                 system("cls");
 
                 break;
@@ -1060,19 +1069,18 @@ int main()
                 ordenarAlfabeticamente(inicio, fim);
                 exibirMensagem("Palavras ordenadas alfabeticamente com sucesso!");
             case '6':
-                exibirPalavraeDescricao(inicio,fim);
+                exibirPalavraeDescricao(inicio,fim,"DICIONARIO");
                 system("pause");
             case '0':
                 system("cls");
-                cout << "Ate a proxima!";
+                exibirMensagem("Ate a proxima!");
+                system("cls");
                 break;
             default:
                 system("cls");
-                cout << "Opcao invalida, tente novamente\n\n";
-                system("pause");
+                exibirMensagem("Opcao invalida, tente novamente");
+                system("cls");
                 break;
         }
     }
-
-    system("pause");
 }
