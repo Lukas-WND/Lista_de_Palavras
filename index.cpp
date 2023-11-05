@@ -479,34 +479,28 @@ int exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim, const char *f
                 while(auxPalavras!=NULL){
                         int x=32;
                         int yy=y;
-                    //quando conseguir descobrir quantas quebras em descrições tera, altera esse gotoxy para um for usando o y anterior e y atual q é o com as quebras
-
-
-
-                    //quando conseguir descobrir quantas quebras em descrições tera, altera esse gotoxy para um for usando o y anterior e y atual q é o com as quebras
 
                     gotoxy(2,y+1); cout << auxPalavras->palavra;
+                    y=y+1;
+                    yy=y;
 
                     //Alteração necessaria para quebrar descrição
-                    for (int i = 0; i < 500 && auxPalavras->descricao[i] != '\0'; i++){
-                        gotoxy(x,y+1);cout << auxPalavras->descricao[i];
-                        if ((i + 1) % 29 == 0) {
+                   /* for (int i = 0; i<500 && auxPalavras->descricao != '\0';i++){
+                        gotoxy(x,y);cout<<auxPalavras->descricao[i];
+                        x++;
+                        if((i+1)%29==0){
                             if(auxPalavras->descricao[i]==' '){
-                                i+1;
+                                //i=i+1;
                                 y++;
-                                x=1;
-                                }else{if(auxPalavras->descricao[i+1]==' '){
-                                    i=i-1;
+                                x=32;
+                            } else {
                                     y++;
-                                    x=1;
-                                }else{
-                                    y++;
-                                    x=1;
+                                    x=32;
                                 }
                             }
-                        }
-                        x++;
-                    }
+                        }*/
+
+
                     for(int i=yy-1;i<=y+1;i++){
                     gotoxy(1,y+1);printf("%c", 179);
                     }
