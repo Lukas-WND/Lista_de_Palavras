@@ -469,7 +469,7 @@ int exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim, const char *f
                     gotoxy(i,y+4); printf("%c", 196);
                 }
             }
-            gotoxy(25,y+2); cout << "Letra " << auxLetras->letra << " = "<< auxLetras-> qtdPalavras;
+            gotoxy(23,y+2); cout << "Letra " << auxLetras->letra << " - "<< auxLetras-> qtdPalavras; cout<<" Palavras";
             y=y+4;
             if (auxLetras -> inicioPalavras == NULL){
                 gotoxy(y,15);cout << "Lista de Palavras Vazias";
@@ -485,7 +485,7 @@ int exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim, const char *f
                     yy=y;
 
                     //Alteração necessaria para quebrar descrição
-                   /* for (int i = 0; i<500 && auxPalavras->descricao != '\0';i++){
+                    for (int i = 0; i<500 && auxPalavras->descricao[i]!= '\0';i++){
                         gotoxy(x,y);cout<<auxPalavras->descricao[i];
                         x++;
                         if((i+1)%29==0){
@@ -498,17 +498,17 @@ int exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim, const char *f
                                     x=32;
                                 }
                             }
-                        }*/
+                        }
 
 
-                    for(int i=yy-1;i<=y+1;i++){
-                    gotoxy(1,y+1);printf("%c", 179);
+                    for(int i=yy;i<=y+1;i++){
+                    gotoxy(1,i);printf("%c", 179);
                     }
-                    for(int i=yy-1;i<=y+1;i++){
-                    gotoxy(31,y+1);printf("%c", 179);
+                    for(int i=yy;i<=y+1;i++){
+                    gotoxy(31,i);printf("%c", 179);
                     }
-                    for(int i=yy-1;i<=y+1;i++){
-                    gotoxy(61,y+1); printf("%c", 179);
+                    for(int i=yy;i<=y+1;i++){
+                    gotoxy(61,i); printf("%c", 179);
                     }
                     //Alteração necessaria para quebrar descrição
                     auxPalavras=auxPalavras->proxPalavra;
