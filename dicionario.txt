@@ -1,0 +1,37 @@
+MEDICO/Profissional de saude que diagnostica e trata doenças e lesoes em pacientes.
+MECANICO/Repara e mantém veiculos e maquinas.
+ADVOGADO/Especialista em leis que oferece aconselhamento legal e representa clientes em processos judiciais.
+ARQUITETO/Projetista de edificios e estruturas, cuidando do planejamento e design.
+ARTISTA/Cria obras de arte visuais, musicais ou cenicas.
+ASTRONOMO/Estuda o universo, incluindo estrelas, planetas e outros corpos celestes.
+PROFESSOR/Educador que ensina e orienta alunos em varias disciplinas.
+POLICIAL/Mantem a ordem publica, aplica a lei e protege cidadaos e propriedades.
+PSICOLOGO/Presta aconselhamento e terapia para problemas de saude mental e emocional.
+PILOTO/Opera aeronaves comerciais ou particulares.
+PARAMEDICO/Presta cuidados de saude de emergencia no local de um acidente ou situacao medica critica.
+ENGENHEIRO/Projeta e constroi sistemas e estruturas, como edificios, pontes e maquinas.
+ENFERMEIRO/Presta cuidados de saude, administra medicamentos e auxilia medicos em hospitais e clinicas.
+ELETRICISTA/Instala, mantem e repara sistemas eletricos.
+ESTILISTA/Projetista de roupas e acessorios de moda.
+ECONOMISTA/Analisa dados economicos e fornece orientacao sobre questoes financeiras.
+CONTADOR/Gerencia financas e registra transacoes financeiras para individuos e empresas.
+CHEF/Prepara e cria pratos culinarios em restaurantes e cozinhas.
+CONSULTOR/Fornece orientacao e estrategias para atender uma necessidade ou resolver determinado problema.
+CARTEIRO/Entrega correspondencias e encomendas aos destinatarios.
+BOMBEIRO/Responde a incendios e situacoes de emergencia, realizando resgates e prestacao de primeiros socorros.
+BIBLIOTECARIO/Gerencia bibliotecas, auxilia na pesquisa e fornece informacoes aos usuarios.
+BIOLOGO/Estuda organismos vivos e suas interacoes no mundo natural.
+FARMACEUTICO/Prepara e distribui medicamentos e aconselha pacientes sobre seu uso.
+FISIOTERAPEUTA/Ajuda na reabilitacao de pacientes com problemas fisicos, musculares e articulares.
+FONOAUDIOLOGO/Trata problemas de fala, linguagem e audicao.
+FLORISTA/Cria e arranja buques e arranjos florais para ocasioes especiais e eventos.
+DENTISTA/Trata problemas dentarios e cuida da saude bucal.
+DESIGNER/Cria elementos visuais e graficos para midia impressa e digital.
+DESENVOLVEDOR/Escreve codigo de software e desenvolve aplicativos e programas de computador.
+VETERINARIO/Médico para animais que diagnostica e trata doencas e ferimentos em animais de estimacao e animais de fazenda.
+JORNALISTA/Coleta, relata e comunica noticias e informacoes.
+TRADUTOR/Converte texto escrito ou falado de um idioma para outro.
+GEOLOGO/Estuda a Terra e sua composicao, incluindo rochas, minerais e recursos naturais.
+GERENTE/Supervisiona atividades para garantir que sejam concluidas com sucesso e dentro do prazo.
+RADIOLOGISTA/Opera maquinas de imagem medica para fazer radiografias.
+INVESTIGADOR/Conduz investigacoes em casos, como questões de seguranca e criminais.
