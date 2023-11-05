@@ -786,6 +786,64 @@ void carregarArquivo(ListaLetras **inicio, ListaLetras **fim) {
 }
 
 
+
+int compararPalavras(const void *a, const void *b) {
+    return strcmp(((ListaPalavras *)a)->palavra, ((ListaPalavras *)b)->palavra);
+}
+
+void ordenarAlfabeticamente(ListaLetras *inicio, ListaLetras *fim) {
+    int totalPalavras = 0;
+    
+    ListaLetras *letra = inicio;
+    
+    // Conta o número total de palavras
+    while (letra != NULL) {
+        totalPalavras += letra->qtdPalavras;
+        letra = letra->proxLetra;
+    }
+
+    if (totalPalavras == 0) {
+        exibirMensagem("Nenhuma palavra cadastrada para ordenar.");
+        return;
+    }
+
+    // Aloca um vetor de palavras
+    ListaPalavras *palavrasOrdenadas = new ListaPalavras[totalPalavras];
+    int index = 0;
+
+    letra = inicio;
+
+    // Copia as palavras para o vetor
+    while (letra != NULL) {
+        ListaPalavras *palavra = letra->inicioPalavras;
+
+        while (palavra != NULL) {
+            strcpy(palavrasOrdenadas[index].palavra, palavra->palavra);
+            strcpy(palavrasOrdenadas[index].descricao, palavra->descricao);
+            palavrasOrdenadas[index].qtdPesquisas = palavra->qtdPesquisas;
+            index++;
+            palavra = palavra->proxPalavra;
+        }
+
+        letra = letra->proxLetra;
+    }
+
+    // Ordena o vetor alfabeticamente
+    qsort(palavrasOrdenadas, totalPalavras, sizeof(ListaPalavras), compararPalavras);
+
+    // Exibe as palavras ordenadas
+    system("cls");
+    cout << "Palavras ordenadas alfabeticamente:\n\n";
+    for (int i = 0; i < totalPalavras; i++) {
+        cout << palavrasOrdenadas[i].palavra << ": " << palavrasOrdenadas[i].descricao << endl;
+    }
+
+    delete[] palavrasOrdenadas;
+    system("pause");
+}
+
+
+
 int main()
 {
     ListaLetras *inicio = NULL;
@@ -815,6 +873,8 @@ int main()
         gotoxy(5, 7);
         cout << "[4] - Atualizar uma palavra           " << endl;
         gotoxy(5, 8);
+        cout << "[5] - Ordenar palavras alfabeticamente" << endl;
+        gotoxy(5, 9);
         cout << "[0] - Sair do programa                " << endl;
 
         gotoxy(42, 3);
@@ -962,6 +1022,10 @@ int main()
                 cout << "Informe a palavra: ";
                 cin.getline(palavra, MAX_PALAVRA);
                 exibirPorRelevancia(inicio, fim, palavra);
+            case '6':
+                system("cls");
+                ordenarAlfabeticamente(inicio, fim);
+                exibirMensagem("Palavras ordenadas alfabeticamente com sucesso!"); 
             case '0':
                 system("cls");
                 cout << "Ate a proxima!";
