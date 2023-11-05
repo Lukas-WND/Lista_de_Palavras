@@ -472,24 +472,50 @@ int exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim, const char *f
             gotoxy(25,y+2); cout << "Letra " << auxLetras->letra << " = "<< auxLetras-> qtdPalavras;
             y=y+4;
             if (auxLetras -> inicioPalavras == NULL){
-                gotoxy(y,15);cout << "Lisra de Palavras Vazias";
+                gotoxy(y,15);cout << "Lista de Palavras Vazias";
                 y=y+1;
             }else {
                 ListaPalavras *auxPalavras = auxLetras->inicioPalavras;
                 while(auxPalavras!=NULL){
-
-
-
+                        int x=32;
+                        int yy=y;
                     //quando conseguir descobrir quantas quebras em descrições tera, altera esse gotoxy para um for usando o y anterior e y atual q é o com as quebras
-                    gotoxy(1,y+1);printf("%c", 179);
-                    gotoxy(31,y+1);printf("%c", 179);
-                    gotoxy(61,y+1); printf("%c", 179);
+
+
+
                     //quando conseguir descobrir quantas quebras em descrições tera, altera esse gotoxy para um for usando o y anterior e y atual q é o com as quebras
 
                     gotoxy(2,y+1); cout << auxPalavras->palavra;
 
                     //Alteração necessaria para quebrar descrição
-                    gotoxy(32,y+1);cout << auxPalavras->descricao;
+                    for (int i = 0; i < 500 && auxPalavras->descricao[i] != '\0'; i++){
+                        gotoxy(x,y+1);cout << auxPalavras->descricao[i];
+                        if ((i + 1) % 29 == 0) {
+                            if(auxPalavras->descricao[i]==' '){
+                                i+1;
+                                y++;
+                                x=1;
+                                }else{if(auxPalavras->descricao[i+1]==' '){
+                                    i=i-1;
+                                    y++;
+                                    x=1;
+                                }else{
+                                    y++;
+                                    x=1;
+                                }
+                            }
+                        }
+                        x++;
+                    }
+                    for(int i=yy-1;i<=y+1;i++){
+                    gotoxy(1,y+1);printf("%c", 179);
+                    }
+                    for(int i=yy-1;i<=y+1;i++){
+                    gotoxy(31,y+1);printf("%c", 179);
+                    }
+                    for(int i=yy-1;i<=y+1;i++){
+                    gotoxy(61,y+1); printf("%c", 179);
+                    }
                     //Alteração necessaria para quebrar descrição
                     auxPalavras=auxPalavras->proxPalavra;
                     y=y+2;
