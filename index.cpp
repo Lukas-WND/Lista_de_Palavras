@@ -1066,10 +1066,12 @@ int main()
                 system("cls");
                 ordenarAlfabeticamente(inicio, fim);
                 exibirMensagem("Palavras ordenadas alfabeticamente com sucesso!");
+                system("cls");
                 break;
             case '6':
                 exibirPalavraeDescricao(inicio,fim,"DICIONARIO");
                 system("pause");
+                system("cls");
                 break;
             case '0':
                 system("cls");
