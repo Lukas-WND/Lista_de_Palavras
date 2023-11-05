@@ -839,61 +839,116 @@ void carregarArquivo(ListaLetras **inicio, ListaLetras **fim) {
 }
 
 
-
-int compararPalavras(const void *a, const void *b) {
-    return strcmp(((ListaPalavras *)a)->palavra, ((ListaPalavras *)b)->palavra);
+void trocar(ListaLetras* a, ListaLetras* b)
+{
+    ListaLetras temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
-void ordenarAlfabeticamente(ListaLetras *inicio, ListaLetras *fim) {
-    int totalPalavras = 0;
 
-    ListaLetras *letra = inicio;
+void ordenarListaPalavras(ListaPalavras** inicio)
+{
+    ListaPalavras* atual = *inicio;
+    ListaPalavras* novaLista = NULL;
 
-    // Conta o número total de palavras
-    while (letra != NULL) {
-        totalPalavras += letra->qtdPalavras;
-        letra = letra->proxLetra;
-    }
+    while (atual != NULL)
+    {
+        ListaPalavras* min = atual;
+        ListaPalavras* temp = atual;
 
-    if (totalPalavras == 0) {
-        exibirMensagem("Nenhuma palavra cadastrada para ordenar.");
-        return;
-    }
-
-    // Aloca um vetor de palavras
-    ListaPalavras *palavrasOrdenadas = new ListaPalavras[totalPalavras];
-    int index = 0;
-
-    letra = inicio;
-
-    // Copia as palavras para o vetor
-    while (letra != NULL) {
-        ListaPalavras *palavra = letra->inicioPalavras;
-
-        while (palavra != NULL) {
-            strcpy(palavrasOrdenadas[index].palavra, palavra->palavra);
-            strcpy(palavrasOrdenadas[index].descricao, palavra->descricao);
-            palavrasOrdenadas[index].qtdPesquisas = palavra->qtdPesquisas;
-            index++;
-            palavra = palavra->proxPalavra;
+        while (temp != NULL)
+        {
+            if (strcmp(temp->palavra, min->palavra) < 0)
+            {
+                min = temp;
+            }
+            temp = temp->proxPalavra;
         }
 
-        letra = letra->proxLetra;
+        // Remova o nó mínimo da lista atual
+        if (min == atual)
+        {
+            *inicio = min->proxPalavra;
+        }
+        else
+        {
+            temp = *inicio;
+            while (temp->proxPalavra != min)
+            {
+                temp = temp->proxPalavra;
+            }
+            temp->proxPalavra = min->proxPalavra;
+        }
+
+        // Adicione o nó mínimo à nova lista
+        min->proxPalavra = NULL;
+        if (novaLista == NULL)
+        {
+            novaLista = min;
+        }
+        else
+        {
+            temp = novaLista;
+            while (temp->proxPalavra != NULL)
+            {
+                temp = temp->proxPalavra;
+            }
+            temp->proxPalavra = min;
+        }
+
+        atual = *inicio;
     }
 
-    // Ordena o vetor alfabeticamente
-    qsort(palavrasOrdenadas, totalPalavras, sizeof(ListaPalavras), compararPalavras);
-
-    // Exibe as palavras ordenadas
-    system("cls");
-    cout << "Palavras ordenadas alfabeticamente:\n\n";
-    for (int i = 0; i < totalPalavras; i++) {
-        cout << palavrasOrdenadas[i].palavra << ": " << palavrasOrdenadas[i].descricao << endl;
-    }
-
-    delete[] palavrasOrdenadas;
-    system("pause");
+    *inicio = novaLista;
 }
+
+void ordenarListaLetras(ListaLetras** inicio)
+{
+    ListaLetras* atual = *inicio;
+
+    while (atual != NULL)
+    {
+        ListaLetras* min = atual;
+        ListaLetras* temp = atual->proxLetra;
+
+        while (temp != NULL)
+        {
+            if (temp->letra < min->letra)
+            {
+                min = temp;
+            }
+
+            temp = temp->proxLetra;
+        }
+
+        // Troca os nós de letra
+        if (min != atual)
+        {
+            ListaLetras* tempAnt = atual->antLetra;
+            ListaLetras* tempProx = min->proxLetra;
+
+            if (tempAnt)
+                tempAnt->proxLetra = min;
+            else
+                *inicio = min;
+
+            min->antLetra = tempAnt;
+            min->proxLetra = atual;
+            atual->antLetra = min;
+            atual->proxLetra = tempProx;
+
+            if (tempProx)
+                tempProx->antLetra = atual;
+        }
+
+        // ordenar a lista de palavras dentro do nó de letra
+        ordenarListaPalavras(&(atual->inicioPalavras));
+
+        atual = atual->proxLetra;
+    }
+}
+
 
 
 
@@ -1086,7 +1141,9 @@ int main()
                 break;
             case '5':
                 system("cls");
-                ordenarAlfabeticamente(inicio, fim);
+                ordenarListaLetras(&inicio);
+                salvarArquivo(inicio, fim);
+                listarDicionario(inicio, fim);
                 exibirMensagem("Palavras ordenadas alfabeticamente com sucesso!");
                 system("cls");
                 break;
