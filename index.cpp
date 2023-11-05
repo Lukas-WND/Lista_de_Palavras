@@ -29,7 +29,7 @@ typedef struct ListaLetras
     ListaLetras *antLetra;
 } ListaLetras;
 
-void gotoxy(int x, int y)
+void gotoxy(int x, int y) //metodo goto -> É chamada para alterar o posicionamento de tudo que for exibido na tela, com base no eixo x e y
 {
     COORD coord;
     coord.X = x;
@@ -37,7 +37,7 @@ void gotoxy(int x, int y)
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
-void quadroMP()
+void quadroMP() //Metodo responsavel pelo quadro mais externo do menu Principal. (1 a ser feito usando o goto)
 {
 
     gotoxy(0, 0);
@@ -70,7 +70,7 @@ void quadroMP()
     printf("%c", 188);
 }
 
-void quadro()
+void quadro() //metodo responsavel pelo quadeo do menu de pesquisar, alteração do quadroMP. (2 a ser criado com o goto)
 {
 
     gotoxy(0, 0);
@@ -103,13 +103,13 @@ void quadro()
     printf("%c", 188);
 }
 
-void exibirMensagem(const char *frase)
+void exibirMensagem(const char *frase) // metodo respondavel por receber uma string e exibir dentro de uma "caixa" (3 metodo criado usando goto, moldavel)
 {
-    int tamanho = strlen(frase);
+    int tamanho = strlen(frase); // responsavel por descobrir o tamanho da string que o metodo recebeu, o tamanho é usado para variar o tamanho do quadro de acordo com o tamanho da string
 
     system("cls");
 
-    for (int i = 4; i <= tamanho + 9; i++)
+    for (int i = 4; i <= tamanho + 9; i++) // tamanho + 9 é usado para poder deixar centralizado a mensagem
     {
         gotoxy(i, 3);
         printf("%c", 196);
@@ -358,11 +358,11 @@ void inserirPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra, char
     }
     else
     {
-        exibirMensagem("Palavra contem um digito invalido");
+        exibirMensagem("Palavra contem um digito invalido"); // mensagem que será exibida em uma "caixa"
     }
 }
-
-void exibirLetras(ListaLetras *inicio, ListaLetras *fim)
+// NAO ESTA SENDO USADA
+void exibirLetras(ListaLetras *inicio, ListaLetras *fim) // NAO ESTA SENDO USADA
 {
     ListaLetras *aux = inicio;
 
@@ -380,7 +380,7 @@ void exibirLetras(ListaLetras *inicio, ListaLetras *fim)
     }
 }
 
-int exibirApenasPalavra(ListaLetras *inicio, ListaLetras *fim, const char *frase){
+int exibirApenasPalavra(ListaLetras *inicio, ListaLetras *fim, const char *frase){ // Metodo responsavel por exibir as palavras em quadro que contem a letra inicial dessa palavra (3 metodo goto criado, maleavel)
 
     int y = 4;
     system("cls");
