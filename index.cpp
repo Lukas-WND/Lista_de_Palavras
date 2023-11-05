@@ -557,7 +557,9 @@ void exibirPorRelevancia(ListaLetras *inicio, ListaLetras *fim, char *palavra){
 
 void exibirPalavra(ListaPalavras palavra){
     system("cls");
-    cout << palavra.palavra << ": " << palavra.descricao << endl;
+    gotoxy(2,2); printf("%c", 254);
+    gotoxy(4,2);
+    cout << palavra.palavra << ": " << palavra.descricao << endl<<endl;
     system("pause");
 }
 
