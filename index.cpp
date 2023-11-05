@@ -49,24 +49,24 @@ void quadroMP()
     }
     gotoxy(45, 0);
     printf("%c", 187);
-    for (int c = 1; c <= 12; c++)
+    for (int c = 1; c <= 13; c++)
     {
         gotoxy(0, c);
         printf("%c", 186);
     }
-    for (int j = 1; j <= 12; j++)
+    for (int j = 1; j <= 13; j++)
     {
         gotoxy(45, j);
         printf("%c", 186);
     }
-    gotoxy(0, 13);
+    gotoxy(0, 14);
     printf("%c", 200);
     for (int i = 1; i <= 44; i++)
     {
-        gotoxy(i, 13);
+        gotoxy(i, 14);
         printf("%c", 205);
     }
-    gotoxy(45, 13);
+    gotoxy(45, 14);
     printf("%c", 188);
 }
 
@@ -898,40 +898,42 @@ int main()
             printf("%c", 196);
         }
         gotoxy(5, 4);
-        cout << "[1] - Adicionar uma palavra           " << endl;
+        cout << "[1] - Adicionar palavra           " << endl;
         gotoxy(5, 5);
-        cout << "[2] - Exibir as palavras existentes   " << endl;
+        cout << "[2] - Pesquisar palavras " << endl;
         gotoxy(5, 6);
-        cout << "[3] - Deletar uma palavra             " << endl;
+        cout << "[3] - Deletar palavra             " << endl;
         gotoxy(5, 7);
-        cout << "[4] - Atualizar uma palavra           " << endl;
+        cout << "[4] - Atualizar palavra           " << endl;
         gotoxy(5, 8);
         cout << "[5] - Ordenar alfabeticamente" << endl;
         gotoxy(5, 9);
+        cout << "[6] - Exibir Dissionario "<< endl;
+        gotoxy(5, 10);
         cout << "[0] - Sair do programa                " << endl;
 
         gotoxy(42, 3);
         printf("%c", 191);
-        for (int j = 4; j <= 9; j++)
+        for (int j = 4; j <= 10; j++)
         {
             gotoxy(3, j);
             printf("%c", 179);
         }
-        for (int c = 4; c <= 9; c++)
+        for (int c = 4; c <= 10; c++)
         {
             gotoxy(42, c);
             printf("%c", 179);
         }
-        gotoxy(3, 10);
+        gotoxy(3, 11);
         printf("%c", 192);
-        gotoxy(42, 10);
+        gotoxy(42, 11);
         printf("%c", 217);
         for (int k = 4; k <= 41; k++)
         {
-            gotoxy(k, 10);
+            gotoxy(k, 11);
             printf("%c", 196);
         }
-        gotoxy(4, 11);
+        gotoxy(4, 12);
         cout << "Selecione uma opcao: ";
         cin >> menu;
         cin.ignore();
@@ -1055,13 +1057,11 @@ int main()
                 break;
             case '5':
                 system("cls");
-                cout << "Informe a palavra: ";
-                cin.getline(palavra, MAX_PALAVRA);
-                exibirPorRelevancia(inicio, fim, palavra);
-            case '6':
-                system("cls");
                 ordenarAlfabeticamente(inicio, fim);
                 exibirMensagem("Palavras ordenadas alfabeticamente com sucesso!");
+            case '6':
+                exibirPalavraeDescricao(inicio,fim);
+                system("pause");
             case '0':
                 system("cls");
                 cout << "Ate a proxima!";
