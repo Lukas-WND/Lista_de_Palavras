@@ -448,7 +448,7 @@ int exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim, const char *f
         gotoxy(26,2); cout<< frase;
 
         while(auxLetras != NULL){
-            int c=0;
+
             gotoxy(1,y);printf("%c", 218);
             for(int i=2;i<=60;i++){
                 gotoxy(i,y); printf("%c", 196);
@@ -478,18 +478,16 @@ int exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim, const char *f
                 ListaPalavras *auxPalavras = auxLetras->inicioPalavras;
                 while(auxPalavras!=NULL){
 
-                    c++;
-                    gotoxy(1,y);printf("%c", 195);
-                    if(c==1){
-                    gotoxy(31,y);printf("%c", 194);
-                    }else{
-                        gotoxy(31,y);printf("%c", 197);
-                    }
-                    gotoxy(61,y+1); printf("%c", 180);
+
+
+                    //quando conseguir descobrir quantas quebras em descrições tera, altera esse gotoxy para um for usando o y anterior e y atual q é o com as quebras
                     gotoxy(1,y+1);printf("%c", 179);
                     gotoxy(31,y+1);printf("%c", 179);
                     gotoxy(61,y+1); printf("%c", 179);
+                    //quando conseguir descobrir quantas quebras em descrições tera, altera esse gotoxy para um for usando o y anterior e y atual q é o com as quebras
+
                     gotoxy(2,y+1); cout << auxPalavras->palavra;
+
                     //Alteração necessaria para quebrar descrição
                     gotoxy(32,y+1);cout << auxPalavras->descricao;
                     //Alteração necessaria para quebrar descrição
