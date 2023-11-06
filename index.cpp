@@ -17,7 +17,7 @@ typedef struct ListaPalavras
 {
     char palavra[MAX_PALAVRA];
     char descricao[MAX_DESCRICAO];
-    int qtdPesquisas;
+    int relevancia;
     ListaPalavras *proxPalavra;
 } ListaPalavras;
 
@@ -39,7 +39,8 @@ void gotoxy(int x, int y)
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
-void quadroMP() //Metodo responsavel pelo quadro mais externo do menu Principal. (1 a ser feito usando o goto)
+// Método responsavel pelo quadro mais externo do menu Principal. (1 a ser feito usando o goto)
+void quadroMP()
 {
 
     gotoxy(0, 0);
@@ -72,7 +73,8 @@ void quadroMP() //Metodo responsavel pelo quadro mais externo do menu Principal.
     printf("%c", 188);
 }
 
-void quadro() //metodo responsavel pelo quadeo do menu de pesquisar, alteração do quadroMP. (2 a ser criado com o goto)
+// Método responsavel pelo quadeo do menu de pesquisar, alteração do quadroMP. (2 a ser criado com o goto)
+void quadro()
 {
 
     gotoxy(0, 0);
@@ -108,11 +110,13 @@ void quadro() //metodo responsavel pelo quadeo do menu de pesquisar, alteração
 // Método que recebe uma string e a exibe dentro de um espaço delimitado
 void exibirMensagem(const char *frase)
 {
-    int tamanho = strlen(frase); // responsavel por descobrir o tamanho da string que o metodo recebeu, o tamanho é usado para variar o tamanho do quadro de acordo com o tamanho da string
+    // responsavel por descobrir o tamanho da string que o metodo recebeu, o tamanho é usado para variar o tamanho do quadro de acordo com o tamanho da string
+    int tamanho = strlen(frase);
 
     system("cls");
 
-    for (int i = 4; i <= tamanho + 9; i++) // tamanho + 9 é usado para poder deixar centralizado a mensagem
+    // tamanho + 9 é usado para poder deixar centralizado a mensagem
+    for (int i = 4; i <= tamanho + 9; i++)
     {
         gotoxy(i, 3);
         printf("%c", 196);
@@ -305,6 +309,7 @@ void salvarArquivo(ListaLetras *inicio, ListaLetras *fim)
 
             while (palavra != NULL)
             {
+                //Insere uma nova linha dentro do arquivo
                 fprintf(arq, "%s/%s\n", palavra->palavra, palavra->descricao);
                 palavra = palavra->proxPalavra;
             }
@@ -362,7 +367,7 @@ void inserirPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra, char
         // Atribui o endereço do nó da lista a um ponteiro local
         letra = buscarLetra(*inicio, *fim, palavra[0]);
 
-        novaPalavra->qtdPesquisas = 0;
+        novaPalavra->relevancia = 0;
         strcpy(novaPalavra->palavra, palavra);
         strcpy(novaPalavra->descricao, descricao);
 
@@ -378,11 +383,11 @@ void inserirPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra, char
         }
 
         letra->qtdPalavras++;
-        salvarArquivo(*inicio, *fim);
+        //salvarArquivo(*inicio, *fim);
     } // Exibe uma mensagem de erro caso a palavra passada como parâmetro contenha um dígito inválido
     else
     {
-        exibirMensagem("Palavra contem um digito invalido"); // mensagem que será exibida em uma "caixa"
+        exibirMensagem("Palavra contem um digito invalido");
     }
 }
 
@@ -450,7 +455,7 @@ void deletarPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra)
 
                 delete (pAtual);
                 letra->qtdPalavras--;
-                salvarArquivo(*inicio, *fim);
+                //salvarArquivo(*inicio, *fim);
             } // A palavra não está na lista
             else
             {
@@ -531,7 +536,8 @@ int exibirApenasPalavra(ListaLetras *inicio, ListaLetras *fim, const char *frase
     return y;
 }
 
-int exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim, const char *frase){ // metodo responsavel por exibir as letras, palavras e descrições (sem duvidas o mais complexo e complicado, maleavel)
+// metodo responsavel por exibir as letras, palavras e descrições (sem duvidas o mais complexo e complicado, maleavel)
+void exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim, const char *frase){
 
     int y = 4;
     system("cls");
@@ -603,7 +609,7 @@ int exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim, const char *f
                     for(int i=yy;i<=y+1;i++){
                         gotoxy(61,i); printf("%c", 179);
                     }
-                    // goto que reescreve por cima da ultima linha escrita no while de palavra e descrição, para poder fechar o "quadrado" 
+                    // goto que reescreve por cima da ultima linha escrita no while de palavra e descrição, para poder fechar o "quadrado"
                     auxPalavras=auxPalavras->proxPalavra;
                     y=y+2;
                     gotoxy(1,y);printf("%c", 195);
@@ -617,7 +623,7 @@ int exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim, const char *f
                     }
 
                 }
-                // goto que reescreve por cima da ultima linha escrita no while de palavra e descrição, para poder fechar o "quadrado" 
+                // goto que reescreve por cima da ultima linha escrita no while de palavra e descrição, para poder fechar o "quadrado"
                 gotoxy(1,y);printf("%c", 192);
                 gotoxy(61,y);printf("%c", 217);
                 for(int i=2;i<=60;i++){
@@ -636,43 +642,66 @@ int exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim, const char *f
     cout<< endl;
 }
 
-void exibirPorRelevancia(ListaLetras *inicio, ListaLetras *fim, char *palavra){
-    if(validPalavra(palavra)){
-        if(inicio != NULL){
-            ListaLetras *auxLetras = inicio;
+int contarSubstrings(const char *str, const char *substring) {
+    int count = 0;
+    size_t substring_len = strlen(substring);
+    size_t str_len = strlen(str);
 
-            while(auxLetras != NULL){
-                ListaPalavras *auxPalavras = auxLetras->inicioPalavras;
-
-                while(auxPalavras != NULL){
-                    char *achou;
-
-                    achou = strstr(auxPalavras->descricao, palavra);
-
-                    if(achou != NULL){
-                        cout << auxPalavras->palavra << ": " << auxPalavras->descricao << endl;
-                        system("pause");
-                    }
-
-                    auxPalavras = auxPalavras->proxPalavra;
-                }
-
-                auxLetras = auxLetras->proxLetra;
-            }
-        } else {
-            exibirMensagem("Nenhuma palavra cadastrada!");
+    for (size_t i = 0; i <= str_len - substring_len; i++) {
+        if (strncmp(str + i, substring, substring_len) == 0) {
+            count++;
+            i += substring_len - 1; // Pular a substring encontrada
         }
-    } else {
-        exibirMensagem("Digito invalido");
     }
+
+    return count;
 }
 
-void exibirPalavra(ListaPalavras palavra){ // metodo responsavel por exibir apenas uma palavra e descrição
-    system("cls");
-    gotoxy(2,2); printf("%c", 254);
-    gotoxy(4,2);
-    cout << palavra.palavra << ": " << palavra.descricao << endl<<endl;
-    system("pause");
+void exibirPorRelevancia(ListaLetras *inicio, ListaLetras *fim, char *palavra){
+    if(validPalavra(palavra)){
+        ListaLetras *auxLetras = inicio;
+        ListaLetras *tempI = NULL, *tempF = NULL;
+
+        while(auxLetras != NULL){
+            ListaPalavras *auxPalavras = auxLetras->inicioPalavras;
+
+            while(auxPalavras != NULL){
+                auxPalavras->relevancia = contarSubstrings(auxPalavras->descricao, palavra);
+
+                if(auxPalavras->relevancia != 0){
+                    inserirPalavra(&tempI, &tempF, auxPalavras->palavra, auxPalavras->descricao);
+                    auxPalavras->relevancia = 0;
+                }
+
+                auxPalavras = auxPalavras->proxPalavra;
+            }
+
+            auxLetras = auxLetras->proxLetra;
+        }
+
+        exibirPalavraeDescricao(tempI, tempF, strupr(palavra));
+        system("pause");
+
+        // Limpar Memória
+        auxLetras = tempI;
+
+        while(auxLetras != NULL){
+            ListaPalavras *auxPalavras = auxLetras->inicioPalavras;
+            ListaLetras *tempL = auxLetras->proxLetra;
+
+            while(auxPalavras != NULL){
+                ListaPalavras *temp;
+                temp = auxPalavras->proxPalavra;
+                deletarPalavra(&tempI, &tempF, auxPalavras->palavra);
+                auxPalavras = temp;
+            }
+
+            auxLetras = tempL;
+        }
+
+    } else {
+        exibirMensagem("Palavra contem digito invalido");
+    }
 }
 
 void menuExibir(ListaLetras *inicio, ListaLetras *fim){
@@ -714,7 +743,7 @@ void menuExibir(ListaLetras *inicio, ListaLetras *fim){
 
         switch (menu) {
             case '1':
-                y=exibirApenasPalavra(inicio,fim, "Pesquisa por Palavra"); // Esse metodo retorna o valor int de y que foi usando nele, para poder dar continuação mesmo fora dele
+                y=exibirApenasPalavra(inicio,fim, "Pesquisa por Palavra");
                 gotoxy(3,y+1);printf("%c",254);
                 cout << "Informe a palavra que deseja buscar: ";
                 cin.getline(palavra, MAX_PALAVRA);
@@ -723,23 +752,23 @@ void menuExibir(ListaLetras *inicio, ListaLetras *fim){
                     ListaLetras *letra = buscarLetra(inicio, fim, toupper(palavra[0]));
 
                     if(letra == NULL){
-                        exibirMensagem("Palavra nao encontrada");// mensagem que será exibida em uma "caixa"
+                        exibirMensagem("Palavra nao encontrada");
                     } else {
                         ListaPalavras *aux = letra->inicioPalavras;
 
                         if(aux == NULL){
-                            exibirMensagem("Lista de palavras vazia");// mensagem que será exibida em uma "caixa"
+                            exibirMensagem("Lista de palavras vazia");
                         } else {
                             while(aux != NULL){
                                 if(aux->proxPalavra == NULL && strcmp(aux->palavra, strupr(palavra)) != 0){
-                                    exibirMensagem("Palavra nao encontrada");// mensagem que será exibida em uma "caixa"
+                                    exibirMensagem("Palavra nao encontrada");
                                 } else if(strcmp(aux->palavra, strupr(palavra)) == 0){
 
-                                    ListaLetras *temp = NULL;
-                                    inserirPalavra(&temp, &temp, aux->palavra, aux->descricao);
-                                    exibirPalavraeDescricao(temp, temp, "teste");
+                                    ListaLetras *tempI = NULL, *tempF = NULL;
+                                    inserirPalavra(&tempI, &tempF, aux->palavra, aux->descricao);
+                                    exibirPalavraeDescricao(tempI, tempF, "teste");
                                     system("pause");
-                                    deletarPalavra(&temp, &temp, aux->palavra);
+                                    deletarPalavra(&tempI, &tempF, aux->palavra);
 
                                     break;
                                 }
@@ -788,7 +817,7 @@ void atualizarPalavra(ListaLetras **inicio,
             inserirPalavra(inicio, fim, novaPalavra, novaDescricao); // Insere a nova palavra em uma outra lista
         }
 
-        salvarArquivo(*inicio, *fim); // As alterações são salvas no arquivo
+        //salvarArquivo(*inicio, *fim); // As alterações são salvas no arquivo
     }
     else
     {
@@ -849,7 +878,7 @@ void ordenarListaPalavras(ListaPalavras** inicio)
             temp = temp->proxPalavra;
         }
 
-        // Remova o nó mínimo da lista atual
+        // Remove o nó mínimo da lista atual
         if (min == atual)
         {
             *inicio = min->proxPalavra;
@@ -864,7 +893,7 @@ void ordenarListaPalavras(ListaPalavras** inicio)
             temp->proxPalavra = min->proxPalavra;
         }
 
-        // Adicione o nó mínimo à nova lista
+        // Adiciona o nó mínimo à nova lista
         min->proxPalavra = NULL;
         if (novaLista == NULL)
         {
@@ -905,7 +934,7 @@ void ordenarListaLetras(ListaLetras** inicio)
             temp = temp->proxLetra;
         }
 
-        // Remova o nó mínimo da lista atual
+        // Remove o nó mínimo da lista atual
         if (min == *inicio)
         {
             *inicio = min->proxLetra;
@@ -919,7 +948,7 @@ void ordenarListaLetras(ListaLetras** inicio)
                 min->proxLetra->antLetra = min->antLetra;
         }
 
-        // Adicione o nó mínimo à nova lista
+        // Adiciona o nó mínimo à nova lista
         min->antLetra = NULL;
         min->proxLetra = NULL;
 
@@ -939,7 +968,7 @@ void ordenarListaLetras(ListaLetras** inicio)
             temp->proxLetra = min;
             min->antLetra = temp;
         }
-        
+
         ordenarListaPalavras(&(min->inicioPalavras));
     }
 
@@ -1035,6 +1064,7 @@ int main()
                 gotoxy(48, 5);
                 cin.getline(descricao, MAX_DESCRICAO);
                 inserirPalavra(&inicio, &fim, palavra, descricao);
+                salvarArquivo(inicio, fim);
                 system("cls");
 
                 break;
@@ -1067,6 +1097,7 @@ int main()
                 cout << "Informe a palavra: ";
                 cin.getline(palavra, MAX_PALAVRA);
                 deletarPalavra(&inicio, &fim, palavra);
+                salvarArquivo(inicio, fim);
                 system("cls");
                 break;
             case '4':
@@ -1112,6 +1143,7 @@ int main()
                         else if (opcao == 'N' || opcao == 'n')
                         {
                             atualizarPalavra(&inicio, &fim, palavraEncontrada, novaPalavra, palavraEncontrada->descricao);
+                            salvarArquivo(inicio, fim);
                             exibirMensagem("Palavra Atualizada");
                         }
                         else
