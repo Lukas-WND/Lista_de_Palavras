@@ -943,6 +943,7 @@ int main()
 
     while (menu != '0')
     {
+        system("cls");
         quadroMP();
         gotoxy(1, 2);
         cout << "               MENU PRINCIPAL             \n\n\n";
