@@ -888,12 +888,12 @@ void ordenarListaPalavras(ListaPalavras** inicio)
 
 void ordenarListaLetras(ListaLetras** inicio)
 {
-    ListaLetras* atual = *inicio;
+    ListaLetras* listaOrdenada = NULL;
 
-    while (atual != NULL)
+    while (*inicio != NULL)
     {
-        ListaLetras* min = atual;
-        ListaLetras* temp = atual->proxLetra;
+        ListaLetras* min = *inicio;
+        ListaLetras* temp = *inicio;
 
         while (temp != NULL)
         {
@@ -905,31 +905,46 @@ void ordenarListaLetras(ListaLetras** inicio)
             temp = temp->proxLetra;
         }
 
-        // Troca os nós de letra
-        if (min != atual)
+        // Remova o nó mínimo da lista atual
+        if (min == *inicio)
         {
-            ListaLetras* tempAnt = atual->antLetra;
-            ListaLetras* tempProx = min->proxLetra;
-
-            if (tempAnt)
-                tempAnt->proxLetra = min;
-            else
-                *inicio = min;
-
-            min->antLetra = tempAnt;
-            min->proxLetra = atual;
-            atual->antLetra = min;
-            atual->proxLetra = tempProx;
-
-            if (tempProx)
-                tempProx->antLetra = atual;
+            *inicio = min->proxLetra;
+            if (*inicio)
+                (*inicio)->antLetra = NULL;
+        }
+        else
+        {
+            min->antLetra->proxLetra = min->proxLetra;
+            if (min->proxLetra)
+                min->proxLetra->antLetra = min->antLetra;
         }
 
-        // ordenar a lista de palavras dentro do nó de letra
-        ordenarListaPalavras(&(atual->inicioPalavras));
+        // Adicione o nó mínimo à nova lista
+        min->antLetra = NULL;
+        min->proxLetra = NULL;
 
-        atual = atual->proxLetra;
+        if (listaOrdenada == NULL)
+        {
+            listaOrdenada = min;
+        }
+        else
+        {
+            ListaLetras* temp = listaOrdenada;
+
+            while (temp->proxLetra != NULL)
+            {
+                temp = temp->proxLetra;
+            }
+
+            temp->proxLetra = min;
+            min->antLetra = temp;
+        }
+        
+        ordenarListaPalavras(&(min->inicioPalavras));
     }
+
+
+    *inicio = listaOrdenada;
 }
 
 int main()
