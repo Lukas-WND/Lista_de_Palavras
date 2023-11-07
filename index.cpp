@@ -455,6 +455,7 @@ void deletarPalavra(ListaLetras **inicio, ListaLetras **fim, char *palavra)
 
                 delete (pAtual);
                 letra->qtdPalavras--;
+                exibirMensagem("Palavra Deletada");
                 //salvarArquivo(*inicio, *fim);
             } // A palavra não está na lista
             else
@@ -766,7 +767,7 @@ void menuExibir(ListaLetras *inicio, ListaLetras *fim){
 
                                     ListaLetras *tempI = NULL, *tempF = NULL;
                                     inserirPalavra(&tempI, &tempF, aux->palavra, aux->descricao);
-                                    exibirPalavraeDescricao(tempI, tempF, "teste");
+                                    exibirPalavraeDescricao(tempI, tempF, palavra);
                                     system("pause");
                                     deletarPalavra(&tempI, &tempF, aux->palavra);
 
