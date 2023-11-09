@@ -660,17 +660,22 @@ void exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim, const char *
             cout << auxPalavras->descricao[i];
             x++;
             if ((i + 1) % 29 == 0)
-            { // responsavel por verificar se já chegou aos 28
-              if (auxPalavras->descricao[i] == ' ')
+            { // responsavel por verificar se já chegou aos 29
+              if ((auxPalavras->descricao[i] != ' '&&auxPalavras->descricao[i]!=',')&&(auxPalavras->descricao[i+1] != ' '&&auxPalavras->descricao[i+1]!=','))
               {
+                gotoxy(x-1,y);cout<<"-";
                 y++;
                 x = 32;
+                gotoxy(x,y);cout<< auxPalavras->descricao[i];
+                x++;
+
               }
               else
               {
                 y++;
                 x = 32;
               }
+
             }
           }
           // variação das linhas do quadrado de acordo com a quantidade de vezes que a "quebra" da descrição aconteceu
