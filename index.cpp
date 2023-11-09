@@ -653,30 +653,41 @@ void exibirPalavraeDescricao(ListaLetras *inicio, ListaLetras *fim, const char *
           y = y + 1;
           yy = y;
 
-          // esse for é responsavel por "quebrar" a descrição a cada 28 caracteres, para caber dentro do quadrado de exibição
+
+          // esse for é responsavel por "quebrar" a descrição a cada 30 caracteres, para caber dentro do quadrado de exibição
           for (int i = 0; i < 500 && auxPalavras->descricao[i] != '\0'; i++)
           {
-            gotoxy(x, y);
-            cout << auxPalavras->descricao[i];
-            x++;
-            if ((i + 1) % 29 == 0)
-            { // responsavel por verificar se já chegou aos 29
-              if (((auxPalavras->descricao[i - 1] != ' ' && auxPalavras->descricao[i - 1] != ',') && (auxPalavras->descricao[i - 2] != ' ' && auxPalavras->descricao[i - 2] != ',')) && ((auxPalavras->descricao[i - 1] != ' ' && auxPalavras->descricao[i - 1] != ',') && (auxPalavras->descricao[i] != ' ' && auxPalavras->descricao[i] != ',')))
-              {
-                gotoxy(x - 1, y);
-                cout << "-";
+            if((x==59) && (auxPalavras->descricao[i]==' '||auxPalavras->descricao[i]==','|| auxPalavras->descricao[i]=='.')){
+
                 y++;
-                x = 32;
-                gotoxy(x, y);
-                cout << auxPalavras->descricao[i];
+                x=32;
+                i++;
+                gotoxy(x,y);cout<< auxPalavras->descricao[i];
+                i++;
                 x++;
-              }
-              else
-              {
-                y++;
-                x = 32;
-              }
+            }else{
+                if(i%29==0 && i!=0 && (x==61)){
+                        if((auxPalavras->descricao[i-1]!=' '&&auxPalavras->descricao[i-1]!=',')&&(auxPalavras->descricao[i]!=' '&&auxPalavras->descricao[i]!=','&&auxPalavras->descricao[i]!='.')){
+                            gotoxy(x-1,y);cout<< "-";
+                            y++;
+                            x=32;
+                            gotoxy(x,y);cout<< auxPalavras->descricao[i-1];
+                            x++;
+                        }else{
+                            y++;
+                            x=32;
+                        }
+                }else{
+
+                }
             }
+            if (auxPalavras->descricao[i]==' '&& x==32){
+                i++;
+            }
+            //gotoxy(x,y+1);system("pause");
+            gotoxy(x,y);cout << auxPalavras->descricao[i];
+            x++;
+
           }
           // variação das linhas do quadrado de acordo com a quantidade de vezes que a "quebra" da descrição aconteceu
           for (int i = yy; i <= y + 1; i++)
