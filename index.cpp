@@ -1000,27 +1000,29 @@ void carregarArquivo(ListaLetras **inicio, ListaLetras **fim)
 
 void ordenarListaPalavras(ListaPalavras **inicio)
 {
-  ListaPalavras *atual = *inicio;
-  ListaPalavras *novaLista = NULL;
+  ListaPalavras *atual = *inicio; // Inicializa um ponteiro para a lista atual
+  ListaPalavras *novaLista = NULL; // Inicializa uma nova lista vazia
 
-  while (atual != NULL)
+  while (atual != NULL) // Loop principal que percorre a lista atual
   {
-    ListaPalavras *min = atual;
-    ListaPalavras *temp = atual;
+    ListaPalavras *min = atual; // Inicializa um ponteiro 'min' com o nó atual
 
+    ListaPalavras *temp = atual; // Inicializa um ponteiro temporário 'temp' com o nó atual
+
+    // Loop interno para encontrar o nó mínimo na lista atual
     while (temp != NULL)
     {
       if (strcmp(temp->palavra, min->palavra) < 0)
       {
-        min = temp;
+        min = temp; // Atualiza 'min' se encontrarmos uma palavra menor
       }
-      temp = temp->proxPalavra;
+      temp = temp->proxPalavra; // Move para o próximo nó
     }
 
     // Remove o nó mínimo da lista atual
     if (min == atual)
     {
-      *inicio = min->proxPalavra;
+      *inicio = min->proxPalavra; // Atualiza o início da lista se 'min' for o primeiro nó
     }
     else
     {
@@ -1029,7 +1031,7 @@ void ordenarListaPalavras(ListaPalavras **inicio)
       {
         temp = temp->proxPalavra;
       }
-      temp->proxPalavra = min->proxPalavra;
+      temp->proxPalavra = min->proxPalavra; // Remove 'min' da lista
     }
 
     // Adiciona o nó mínimo à nova lista
@@ -1045,38 +1047,40 @@ void ordenarListaPalavras(ListaPalavras **inicio)
       {
         temp = temp->proxPalavra;
       }
-      temp->proxPalavra = min;
+      temp->proxPalavra = min; // Adiciona 'min' à nova lista
     }
 
-    atual = *inicio;
+    atual = *inicio; // Reinicia o processo para o nó atual
   }
 
-  *inicio = novaLista;
+  *inicio = novaLista; // Atualiza o início para apontar para a nova lista ordenada
 }
+
 
 void ordenarListaLetras(ListaLetras **inicio)
 {
-  ListaLetras *listaOrdenada = NULL;
+  ListaLetras *listaOrdenada = NULL; // Inicializa uma nova lista de letras ordenada
 
-  while (*inicio != NULL)
+  while (*inicio != NULL) // Loop principal que percorre a lista de letras original
   {
-    ListaLetras *min = *inicio;
-    ListaLetras *temp = *inicio;
+    ListaLetras *min = *inicio; // Inicializa um ponteiro 'min' com o nó atual
 
+    ListaLetras *temp = *inicio; // Inicializa um ponteiro temporário 'temp' com o nó atual
+
+    // Loop interno para encontrar o nó mínimo na lista de letras original
     while (temp != NULL)
     {
       if (temp->letra < min->letra)
       {
-        min = temp;
+        min = temp; // Atualiza 'min' se encontrarmos uma letra menor
       }
-
-      temp = temp->proxLetra;
+      temp = temp->proxLetra; // Move para o próximo nó
     }
 
-    // Remove o nó mínimo da lista atual
+    // Remove o nó mínimo da lista de letras original
     if (min == *inicio)
     {
-      *inicio = min->proxLetra;
+      *inicio = min->proxLetra; // Atualiza o início se 'min' for o primeiro nó
       if (*inicio)
         (*inicio)->antLetra = NULL;
     }
@@ -1087,10 +1091,9 @@ void ordenarListaLetras(ListaLetras **inicio)
         min->proxLetra->antLetra = min->antLetra;
     }
 
-    // Adiciona o nó mínimo à nova lista
+    // Adiciona o nó mínimo à nova lista de letras ordenada
     min->antLetra = NULL;
     min->proxLetra = NULL;
-
     if (listaOrdenada == NULL)
     {
       listaOrdenada = min;
@@ -1098,20 +1101,22 @@ void ordenarListaLetras(ListaLetras **inicio)
     else
     {
       ListaLetras *temp = listaOrdenada;
-
       while (temp->proxLetra != NULL)
       {
         temp = temp->proxLetra;
       }
-
-      temp->proxLetra = min;
+      temp->proxLetra = min; // Adiciona 'min' à nova lista
       min->antLetra = temp;
     }
 
+    // Chama a função 'ordenarListaPalavras' para ordenar as palavras dentro do nó 'min'
     ordenarListaPalavras(&(min->inicioPalavras));
   }
 
-  *inicio = listaOrdenada;
+  //deletar lista de letras original to-do
+
+  *inicio = listaOrdenada; // Atualiza o início para apontar para a nova lista de letras ordenada
+
 }
 
 int main()
